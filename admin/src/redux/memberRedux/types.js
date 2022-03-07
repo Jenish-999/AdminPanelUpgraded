@@ -1,0 +1,8 @@
+export const memberTypes = {
+  ADD_MEMBER: "ADD_MEMBER",
+  LIST_MEMBER: "LIST_MEMBER",
+  DELETE_MEMBER: "DELETE_MEMBER",
+  VIEW_MEMBER: "VIEW_MEMBER",
+};
+
+// export const FETCH_ALL_MEMBERS = "FETCH_ALL_MEMBERS";
