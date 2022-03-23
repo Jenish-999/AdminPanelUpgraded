@@ -32,30 +32,27 @@ function Navbar() {
         >
           <ul className="navbar-nav">
             <li className="nav-item">
-              <Link
-                className="nav-link text-white active bg-gradient-primary"
-                to="/Dashboard"
-              >
+              <Link className="nav-link text-white  " to="/Dashboard">
                 <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                  <i className="material-icons opacity-10">dashboard</i>
+                  <i className="material-icons opacity-10">group</i>
                 </div>
                 <span className="nav-link-text ms-1">All Members</span>
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link text-white " to="/Tables">
+              <Link className="nav-link text-white " to="/Events">
                 <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
                   <i className="material-icons opacity-10">table_view</i>
                 </div>
-                <span className="nav-link-text ms-1">Tables</span>
+                <span className="nav-link-text ms-1">Events</span>
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link text-white " to="/Billing">
+              <Link className="nav-link text-white " to="/Inquiry">
                 <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
                   <i className="material-icons opacity-10">receipt_long</i>
                 </div>
-                <span className="nav-link-text ms-1">Billing</span>
+                <span className="nav-link-text ms-1">Inquiries</span>
               </Link>
             </li>
             <li className="nav-item mt-3">
@@ -64,11 +61,21 @@ function Navbar() {
               </h6>
             </li>
             <li className="nav-item">
-              <Link className="nav-link text-white " to="/Profile">
+              <Link className="nav-link text-white " to="/ImageUpload">
                 <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                  <i className="material-icons opacity-10">person</i>
+                  <i className="material-icons opacity-10">collections</i>
                 </div>
-                <span className="nav-link-text ms-1">Profile</span>
+                <span className="nav-link-text ms-1">ImageUpload</span>
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link text-white " to="/Notices">
+                <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                  <i className="material-icons opacity-10">
+                    chrome_reader_mode
+                  </i>
+                </div>
+                <span className="nav-link-text ms-1">Notices</span>
               </Link>
             </li>
             {/* <li className="nav-item">

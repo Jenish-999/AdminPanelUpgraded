@@ -1,12 +1,5 @@
-import React, { useEffect, useState } from "react";
-import team1 from "../assets/img/teams/team-1.jpg";
-import team2 from "../assets/img/teams/team-2.jpg";
-import team3 from "../assets/img/teams/team-3.jpg";
-import team4 from "../assets/img/teams/team-4.jpg";
-import team5 from "../assets/img/teams/team-5.jpg";
-import Headernavbar from "./Headernavbar";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import Navbar from "./Navbar";
 import Footer from "./Footer";
 import Breadcrumb from "../component/Breadcrumb";
 import Wrapper from "../component/Wapper";
@@ -16,24 +9,77 @@ import {
   deleteMemberFunction,
   listmemberFunction,
 } from "../redux/memberRedux/action";
+import Styled from "styled-components";
 import { toast } from "react-toastify";
+import { inquiryMemberDetailsFunction } from "../redux/inquiryRedux/action";
+
 function Dashboard() {
   const memberList = useSelector((state) => state.members.addMemberData);
+  const inquiryDetails = useSelector((state) => state.inquiry.inquiryDetails);
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.members.loading);
+
+  const list = {
+    memberList,
+  };
+
+  const [searchField, setSearchField] = useState("");
+
+  const [searchResult, setSearchResult] = useState();
+
+  // Handle FinalList
+  const finalList = Object.keys(list.memberList).map((id, index) => {
+    // console.log("Full Lenght DAta", list.memberList[id].fullName);
+    let result = list.memberList[id];
+    return result;
+  });
+
+  // Search Handler
+  const searchHandler = (e) => {
+    setSearchField(e.target.value);
+
+    if (searchField !== "") {
+      const newMemberList = finalList.filter((item) => {
+        // console.log("ITEM", item.fullName);
+        console.log(
+          "NewMemberFilter : ",
+          Object.values(item.fullName)
+            .join("")
+            .toLowerCase()
+            .includes(searchField.toLowerCase())
+        );
+
+        return Object.values(item.fullName)
+          .join("")
+          .toLowerCase()
+          .includes(searchField.toLowerCase());
+      });
+      // ;
+      return setSearchResult(newMemberList);
+    }
+  };
+
+  console.log("SearchField :", searchField);
+  console.log("Final List : ", finalList);
+  console.log("Search Result : ", searchResult);
+
+  const handleDelete = (id, email, password) => {
+    console.log(id, email, password);
+    if (email && password) {
+      console.log(email, password);
+      dispatch(deleteMemberFunction(id, { email, password }));
+      dispatch(listmemberFunction());
+      toast.success("Deleted!");
+    } else {
+      toast.error("Try,later");
+    }
+  };
 
   // useEffect
   useEffect(() => {
     dispatch(listmemberFunction());
+    dispatch(inquiryMemberDetailsFunction());
   }, []);
-
-  const handleDelete = (id) => {
-    dispatch(deleteMemberFunction(id));
-    dispatch(listmemberFunction());
-    // toast.success("Deleted!");
-  };
-
-  // const totalMem = ;
 
   return (
     <>
@@ -78,9 +124,14 @@ function Dashboard() {
                     </div>
                     <div className="text-end pt-1">
                       <p className="text-sm mb-0 text-capitalize">
-                        Today's Users
+                        Total Inquires
                       </p>
-                      <h4 className="mb-0">2,300</h4>
+                      <h4 className="mb-0">
+                        {inquiryDetails &&
+                        Object.keys(inquiryDetails).length !== 0
+                          ? Object.keys(inquiryDetails).length
+                          : "0"}
+                      </h4>
                     </div>
                   </div>
                   <hr className="dark horizontal my-0" />
@@ -110,15 +161,24 @@ function Dashboard() {
                       </div>
                       <div className="div d-flex ">
                         <div className="input-group input-group-outline h-25">
-                          <label className="form-label text-white opacity-6">
+                          {/* <label className="form-label text-white opacity-6">
                             Search Members...
-                          </label>
+                          </label> */}
                           <input
-                            type="text"
-                            className="form-control text-white"
+                            // ref={inputEl}
+                            type="search"
+                            className="form-control text-dark bg-light"
+                            placeholder="Search Members.."
+                            value={searchField}
+                            onChange={searchHandler}
                           />
                         </div>
-                        <div className="input-group input-group-outline h-25 mx-2">
+                        <div
+                          className="input-group input-group-outline h-25 mx-2"
+                          onClick={() => {
+                            dispatch({ type: "ROUTE_NULL" });
+                          }}
+                        >
                           <Link
                             className="btn bg-gradient-warning mb-0"
                             to="/AddMembers"
@@ -177,76 +237,167 @@ function Dashboard() {
                               <td>Loading...</td>
                             </tr>
                           ) : memberList && memberList.length !== 0 ? (
-                            Object.keys(memberList).map((id, index) => {
-                              return (
-                                <tr key={id}>
-                                  <td>
-                                    <h6>{index + 1}</h6>
-                                  </td>
-                                  <td>
-                                    <div className="d-flex px-2 py-1">
-                                      <div>
-                                        <img
-                                          src={team2}
-                                          className="avatar avatar-sm me-3 border-radius-lg"
-                                          alt="user1"
-                                        />
+                            searchField.length < 1 ? (
+                              Object.keys(memberList).map((id, index) => {
+                                return (
+                                  <tr key={id}>
+                                    <td>
+                                      <h6>{index + 1}</h6>
+                                    </td>
+                                    <td>
+                                      <div className="d-flex px-2 py-1">
+                                        <div>
+                                          <ImgTag
+                                            src={memberList[id].image}
+                                            className="avatar avatar-lg me-3"
+                                            alt="user1"
+                                          />
+                                        </div>
+                                        <div className="d-flex flex-column justify-content-center">
+                                          <h6 className="mb-0 text-sm">
+                                            {memberList[id].fullName}
+                                          </h6>
+                                        </div>
                                       </div>
-                                      <div className="d-flex flex-column justify-content-center">
-                                        <h6 className="mb-0 text-sm">
-                                          {memberList[id].fullName}
-                                        </h6>
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td>
-                                    <p className="text-xs font-weight-bold mb-0">
-                                      {memberList[id].email}
-                                    </p>
-                                  </td>
-                                  <td>
-                                    <p className="text-xs font-weight-bold mb-0">
-                                      {memberList[id].houseNo}
-                                    </p>
-                                  </td>
-                                  <td>
-                                    <p className="text-xs font-weight-bold mb-0">
-                                      {memberList[id].totalMembers}
-                                    </p>
-                                  </td>
-                                  <td>
-                                    <p className="text-xs font-weight-bold mb-0">
-                                      {memberList[id].age}
-                                    </p>
-                                  </td>
-                                  <td>
-                                    <p className="text-xs font-weight-bold mb-0">
-                                      {memberList[id].gender}
-                                    </p>
-                                  </td>
-                                  <td className="align-middle text-center">
-                                    <span className="text-secondary text-xs font-weight-bold">
-                                      {new Date().toDateString()}
-                                    </span>
-                                  </td>
-                                  <td className="align-middle text-center text-sm cursor-pointer">
-                                    <Link to={`/Profile/${id}`}>
-                                      <span className="badge badge-sm bg-gradient-success">
-                                        View
+                                    </td>
+                                    <td>
+                                      <p className="text-xs font-weight-bold mb-0">
+                                        {memberList[id].email}
+                                      </p>
+                                    </td>
+                                    <td>
+                                      <p className="text-xs font-weight-bold mb-0">
+                                        {memberList[id].wing}-
+                                        {memberList[id].houseNo}
+                                      </p>
+                                    </td>
+                                    <td>
+                                      <p className="text-xs font-weight-bold mb-0">
+                                        {memberList[id].totalMembers}
+                                      </p>
+                                    </td>
+                                    <td>
+                                      <p className="text-xs font-weight-bold mb-0">
+                                        {memberList[id].age}
+                                      </p>
+                                    </td>
+                                    <td>
+                                      <p className="text-xs font-weight-bold mb-0">
+                                        {memberList[id].gender}
+                                      </p>
+                                    </td>
+                                    <td className="align-middle text-center">
+                                      <span className="text-secondary text-xs font-weight-bold">
+                                        {new Date().toDateString()}
                                       </span>
-                                    </Link>
-                                  </td>
-                                  <td
-                                    className="align-middle text-center text-sm cursor-pointer"
-                                    onClick={() => handleDelete(id)}
-                                  >
-                                    <span className="badge badge-sm bg-gradient-danger">
-                                      Delete
-                                    </span>
-                                  </td>
-                                </tr>
-                              );
-                            })
+                                    </td>
+                                    <td className="align-middle text-center text-sm cursor-pointer">
+                                      <Link to={`/Profile/${id}`}>
+                                        <span className="badge badge-sm bg-gradient-success">
+                                          View
+                                        </span>
+                                      </Link>
+                                    </td>
+                                    <td
+                                      className="align-middle text-center text-sm cursor-pointer"
+                                      onClick={() =>
+                                        handleDelete(
+                                          id,
+                                          memberList[id].email,
+                                          memberList[id].password
+                                        )
+                                      }
+                                    >
+                                      <span className="badge badge-sm bg-gradient-danger">
+                                        Delete
+                                      </span>
+                                    </td>
+                                  </tr>
+                                );
+                              })
+                            ) : searchResult && searchResult.length !== 0 ? (
+                              Object.keys(searchResult).map((id, index) => {
+                                return (
+                                  <tr key={id}>
+                                    <td>
+                                      <h6>{index + 1}</h6>
+                                    </td>
+                                    <td>
+                                      <div className="d-flex px-2 py-1">
+                                        <div>
+                                          <ImgTag
+                                            src={searchResult[id].image}
+                                            className="avatar avatar-lg me-3"
+                                            alt="user1"
+                                          />
+                                        </div>
+                                        <div className="d-flex flex-column justify-content-center">
+                                          <h6 className="mb-0 text-sm">
+                                            {searchResult[id].fullName}
+                                          </h6>
+                                        </div>
+                                      </div>
+                                    </td>
+                                    <td>
+                                      <p className="text-xs font-weight-bold mb-0">
+                                        {searchResult[id].email}
+                                      </p>
+                                    </td>
+                                    <td>
+                                      <p className="text-xs font-weight-bold mb-0">
+                                        {searchResult[id].wing}-
+                                        {searchResult[id].houseNo}
+                                      </p>
+                                    </td>
+                                    <td>
+                                      <p className="text-xs font-weight-bold mb-0">
+                                        {searchResult[id].totalMembers}
+                                      </p>
+                                    </td>
+                                    <td>
+                                      <p className="text-xs font-weight-bold mb-0">
+                                        {searchResult[id].age}
+                                      </p>
+                                    </td>
+                                    <td>
+                                      <p className="text-xs font-weight-bold mb-0">
+                                        {searchResult[id].gender}
+                                      </p>
+                                    </td>
+                                    <td className="align-middle text-center">
+                                      <span className="text-secondary text-xs font-weight-bold">
+                                        {new Date().toDateString()}
+                                      </span>
+                                    </td>
+                                    <td className="align-middle text-center text-sm cursor-pointer">
+                                      <Link to={`/Profile/${id}`}>
+                                        <span className="badge badge-sm bg-gradient-success">
+                                          View
+                                        </span>
+                                      </Link>
+                                    </td>
+                                    <td
+                                      className="align-middle text-center text-sm cursor-pointer"
+                                      onClick={() =>
+                                        handleDelete(
+                                          id,
+                                          searchResult[id].email,
+                                          searchResult[id].password
+                                        )
+                                      }
+                                    >
+                                      <span className="badge badge-sm bg-gradient-danger">
+                                        Delete
+                                      </span>
+                                    </td>
+                                  </tr>
+                                );
+                              })
+                            ) : (
+                              <tr>
+                                <td>Empty...</td>
+                              </tr>
+                            )
                           ) : (
                             <tr>
                               <td>Empty...</td>
@@ -269,5 +420,13 @@ function Dashboard() {
     </>
   );
 }
+
+const ImgTag = Styled.img`
+width: 100px;
+height: 100px;
+background-position: center;
+// background-size: cover;
+object-fit: contain;
+`;
 
 export default Dashboard;

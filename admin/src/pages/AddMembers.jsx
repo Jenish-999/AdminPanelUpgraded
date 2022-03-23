@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import LeftImg from "../assets/img/signup-bg-img.jpg";
 import Headernavbar from "./Headernavbar";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 import Breadcrumb from "../component/Breadcrumb";
 import "../App.css";
@@ -12,15 +12,29 @@ import {
   listmemberFunction,
 } from "../redux/memberRedux/action";
 import { toast } from "react-toastify";
+import { storage, allStorage } from "../firebase";
+import Styled from "styled-components";
 
 function AddMembers({ PagesText }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const memberData = useSelector((state) => state.members.addMemberData);
+  const [profileImage, SetProfileImage] = useState(null);
+  const [idProofImage, SetIdProofImage] = useState(null);
+  const [imgUrlStoreState, setImgUrlStoreState] = useState({
+    profileUrlState: "",
+    proofUrlState: "",
+  });
+  const [formImg, setFormValue] = useState("");
+  const [loadingState, setLoadingState] = useState(false);
+  // const memberList = useSelector((state) => state.members.addMemberData);
+
+  // const memberData = useSelector((state) => state.members.addMemberData);
+
+  const routing = useSelector((state) => state.members.routing);
 
   useEffect(() => {
-    dispatch(listmemberFunction());
+    // dispatch(listmemberFunction());
   }, []);
 
   // Formik Validation
@@ -67,7 +81,36 @@ function AddMembers({ PagesText }) {
       errors.rePassword = "Must be of 6 Characters long";
     }
 
+    // wing
+    if (!values.wing.length) {
+      errors.wing = "required";
+    }
+
+    //Status
+    if (!values.status.length) {
+      errors.status = "required";
+    }
+
+    // ImageValue
+    // if (!values.imgValue) {
+    //   errors.imgValue = "Select Profile Picture";
+    // }
+
     return errors;
+  };
+
+  // handleChangeImageProfile
+  const handleChangeImage = (e) => {
+    if (e.target.files[0]) {
+      SetProfileImage(e.target.files[0]);
+    }
+  };
+
+  // handleChangeImageIdProof
+  const handleChangeImageIdProof = (e) => {
+    if (e.target.files[0]) {
+      SetIdProofImage(e.target.files[0]);
+    }
   };
 
   // Formik Form Handling
@@ -81,18 +124,89 @@ function AddMembers({ PagesText }) {
       gender: "",
       password: "",
       rePassword: "",
+      wing: "",
+      status: "",
     },
     validate,
     onSubmit: (values, { resetForm }) => {
       if (values.password !== values.rePassword) {
-        toast.error("Please, re-check your Password");
+        toast.error("Recheck your password");
       } else {
-        dispatch(addMemberFunction(values));
-        resetForm(values);
-        navigate("/");
+        console.log("Simple Values: ", values);
+        // setLoadingState(true);
+        // console.log("Upgrade Values: ", upgradeValues);
+        const uploadImg = storage
+          .ref(`profiles/${profileImage.name}`)
+          .put(profileImage);
+        const uploadProof = storage
+          .ref(`IdProof/${idProofImage.name}`)
+          .put(idProofImage);
+
+        console.log("Image Profile : ", profileImage.name);
+        console.log("Image Id Proof : ", idProofImage.name);
+
+        console.log("Submit");
+        uploadImg.on(
+          "state",
+          (spanshot) => {},
+          (err) => {
+            console.log("IMAGE PROFILE ERROR", err);
+          },
+          () => {
+            storage
+              .ref("profiles")
+              .child(profileImage.name)
+              .getDownloadURL()
+              .then((profileUrl) => {
+                console.log("PROFILE IMAGE URL : ", profileUrl);
+                if (profileUrl) {
+                  uploadProof.on(
+                    "state",
+                    (spanshot) => {},
+                    (err) => {
+                      console.log("ID PROOF ERROR", err);
+                    },
+                    () => {
+                      storage
+                        .ref("IdProof")
+                        .child(idProofImage.name)
+                        .getDownloadURL()
+                        .then((ProofUrl) => {
+                          console.log("ID PROOF URL : ", ProofUrl);
+                          if (ProofUrl) {
+                            console.log("PROFILE URL : ", profileUrl);
+                            let upgradeValues = {
+                              ...values,
+                              image: profileUrl,
+                              idproof: ProofUrl,
+                            };
+                            dispatch(addMemberFunction(upgradeValues));
+                            setLoadingState(false);
+                            toast.success("success");
+                            resetForm(values);
+                          }
+                        })
+                        .catch((err) => {
+                          toast.error("Try later.");
+                          console.log("Image Error: ", err);
+                        });
+                    }
+                  );
+                }
+              })
+              .catch((err) => {
+                toast.error("Try later.");
+                console.log("Image Error: ", err);
+              });
+          }
+        );
       }
     },
   });
+
+  if (routing) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <>
@@ -125,6 +239,35 @@ function AddMembers({ PagesText }) {
                           className="md-form"
                           onSubmit={formik.handleSubmit}
                         >
+                          <label className="text-secondary">Profile</label>
+                          <div className="input-group input-group-outline">
+                            <div className="btn btn-gradient-primary border btn-sm ">
+                              <span>
+                                {/* Choose files */}
+                                <input
+                                  type="file"
+                                  className="btn-gradient-primary"
+                                  name="profileImg"
+                                  accept=".png, .jpg, .jpeg"
+                                  onChange={handleChangeImage}
+                                />
+                              </span>
+                            </div>
+                          </div>
+                          <label className="text-secondary">IdProof</label>
+                          <div className="input-group input-group-outline"></div>
+                          <div className="btn btn-gradient-primary border btn-sm ">
+                            <span>
+                              {/* Choose files */}
+                              <input
+                                type="file"
+                                className="btn-gradient-primary"
+                                name="idProofImg"
+                                accept=".png, .jpg, .jpeg"
+                                onChange={handleChangeImageIdProof}
+                              />
+                            </span>
+                          </div>
                           <div className="input-group input-group-outline">
                             <input
                               type="text"
@@ -146,96 +289,6 @@ function AddMembers({ PagesText }) {
                               ) : null}
                             </small>
                           </div>
-                          <div className="input-group input-group-outline mt-3">
-                            <input
-                              type="email"
-                              className="form-control text-uppercase"
-                              autoComplete="off"
-                              placeholder="E-mail"
-                              name="email"
-                              onChange={formik.handleChange}
-                              value={formik.values.email}
-                              onBlur={formik.handleBlur}
-                            />
-                            <small>
-                              {formik.touched.email && formik.errors.email ? (
-                                <small className="form-text text-muted p-1">
-                                  {/* {formik.errors.email} */}
-                                  <i className="fa fa-exclamation-circle"></i>
-                                </small>
-                              ) : null}
-                            </small>
-                          </div>
-                          <div className="input-group input-group-outline mt-3">
-                            <input
-                              type="text"
-                              className="form-control text-uppercase"
-                              autoComplete="off"
-                              placeholder="HouseNo"
-                              name="houseNo"
-                              onChange={formik.handleChange}
-                              value={formik.values.houseNo}
-                              onBlur={formik.handleBlur}
-                            />
-                            <small>
-                              {formik.touched.houseNo &&
-                              formik.errors.houseNo ? (
-                                <small className="form-text text-muted p-1">
-                                  {/* {formik.errors.houseNo} */}
-                                  <i className="fa fa-exclamation-circle"></i>
-                                </small>
-                              ) : null}
-                            </small>
-                          </div>
-                          <div className="input-group input-group-outline mt-3">
-                            <input
-                              type="number"
-                              className="form-control text-uppercase"
-                              autoComplete="off"
-                              placeholder="Age"
-                              name="age"
-                              onChange={formik.handleChange}
-                              value={formik.values.age}
-                              onBlur={formik.handleBlur}
-                            />
-                            <small>
-                              {formik.touched.age && formik.errors.age ? (
-                                <small className="form-text text-muted p-1">
-                                  {/* {formik.errors.age} */}
-                                  <i className="fa fa-exclamation-circle"></i>
-                                </small>
-                              ) : null}
-                            </small>
-                          </div>
-                          <div className="input-group input-group-outline mt-3">
-                            <input
-                              type="number"
-                              className="form-control text-uppercase"
-                              autoComplete="off"
-                              placeholder="TotalMembers"
-                              name="totalMembers"
-                              onChange={formik.handleChange}
-                              value={formik.values.totalMembers}
-                              onBlur={formik.handleBlur}
-                            />
-                            <small>
-                              {formik.touched.totalMembers &&
-                              formik.errors.totalMembers ? (
-                                <small className="form-text text-muted p-1">
-                                  {/* {formik.errors.totalMembers} */}
-                                  <i className="fa fa-exclamation-circle"></i>
-                                </small>
-                              ) : null}
-                            </small>
-                          </div>
-                          {/* <div className="input-group input-group-outline mb-3">
-                            <input
-                              type="file"
-                              className="form-control"
-                              autoComplete="off"
-                              placeholder="TotalMembers"
-                            />
-                          </div> */}
                           <div className="form-check form-check-inline">
                             <input
                               className="form-check-input text-uppercase"
@@ -280,6 +333,132 @@ function AddMembers({ PagesText }) {
                             >
                               Other
                             </label>
+                          </div>
+                          <div className="input-group input-group-outline mt-3">
+                            <input
+                              type="email"
+                              className="form-control text-uppercase"
+                              autoComplete="off"
+                              placeholder="E-mail"
+                              name="email"
+                              onChange={formik.handleChange}
+                              value={formik.values.email}
+                              onBlur={formik.handleBlur}
+                            />
+                            <small>
+                              {formik.touched.email && formik.errors.email ? (
+                                <small className="form-text text-muted p-1">
+                                  {/* {formik.errors.email} */}
+                                  <i className="fa fa-exclamation-circle"></i>
+                                </small>
+                              ) : null}
+                            </small>
+                          </div>
+
+                          <div className="input-group input-group-outline mt-3">
+                            <input
+                              type="number"
+                              className="form-control text-uppercase"
+                              autoComplete="off"
+                              placeholder="Age"
+                              name="age"
+                              onChange={formik.handleChange}
+                              value={formik.values.age}
+                              onBlur={formik.handleBlur}
+                            />
+                            <small>
+                              {formik.touched.age && formik.errors.age ? (
+                                <small className="form-text text-muted p-1">
+                                  {/* {formik.errors.age} */}
+                                  <i className="fa fa-exclamation-circle"></i>
+                                </small>
+                              ) : null}
+                            </small>
+                          </div>
+                          <div className="input-group input-group-outline mt-3">
+                            <input
+                              type="number"
+                              className="form-control text-uppercase"
+                              autoComplete="off"
+                              placeholder="TotalMembers"
+                              name="totalMembers"
+                              onChange={formik.handleChange}
+                              value={formik.values.totalMembers}
+                              onBlur={formik.handleBlur}
+                            />
+                            <small>
+                              {formik.touched.totalMembers &&
+                              formik.errors.totalMembers ? (
+                                <small className="form-text text-muted p-1">
+                                  {/* {formik.errors.totalMembers} */}
+                                  <i className="fa fa-exclamation-circle"></i>
+                                </small>
+                              ) : null}
+                            </small>
+                          </div>
+                          <div className="input-group input-group-outline mt-3">
+                            <select
+                              name="status"
+                              className="form-select form-control text-secondary"
+                              aria-label="Default select example"
+                              onChange={formik.handleChange}
+                              value={formik.values.status}
+                              onBlur={formik.handleBlur}
+                            >
+                              <option>OwnerShip Status</option>
+                              <option value="Landlord">LANDLORD</option>
+                              <option value="Lease">LEASE</option>
+                            </select>
+                          </div>
+                          <div className="input-group input-group-outline mt-3">
+                            {/* <div> */}
+
+                            <div className="input-group">
+                              <input
+                                type="text"
+                                className="form-control"
+                                id="validationCustomUsername"
+                                placeholder="HouseNo"
+                                name="houseNo"
+                                onChange={formik.handleChange}
+                                value={formik.values.houseNo}
+                                onBlur={formik.handleBlur}
+                              />
+                              <small>
+                                {formik.touched.houseNo &&
+                                formik.errors.houseNo ? (
+                                  <small className="form-text text-muted p-1">
+                                    {/* {formik.errors.houseNo} */}
+                                    <i className="fa fa-exclamation-circle"></i>
+                                  </small>
+                                ) : null}
+                              </small>
+                              <div className="invalid-feedback">
+                                Please choose a username.
+                              </div>
+                              <div className="input-group-prepend">
+                                <InputGroupText
+                                  className="input-group-text"
+                                  id="inputGroupPrepend"
+                                >
+                                  <SelectField
+                                    name="wing"
+                                    id=""
+                                    className="form-control text-white bg-dark z-index-1"
+                                    onChange={formik.handleChange}
+                                    value={formik.values.wing}
+                                    onBlur={formik.handleBlur}
+                                  >
+                                    <option>Wing</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                  </SelectField>
+                                </InputGroupText>
+                              </div>
+                            </div>
+                            {/* </div> */}
                           </div>
                           <div className="input-group input-group-outline mt-3">
                             <input
@@ -349,10 +528,26 @@ function AddMembers({ PagesText }) {
                           <div className="text-center">
                             <button
                               type="submit"
+                              value={"Set Member"}
                               className="btn btn-lg bg-gradient-primary btn-lg w-100 mt-4 mb-0"
                             >
-                              Sign Up
+                              {loadingState ? (
+                                <div
+                                  className="spinner-border spinner-border-sm"
+                                  role="status"
+                                >
+                                  <span className="sr-only">Loading...</span>
+                                </div>
+                              ) : (
+                                "Set Member"
+                              )}
                             </button>
+
+                            {/* Sign Up */}
+                            {/* </input> */}
+                            {/* <div className="bg-gradient-warning btn btn-lg w-100 mt-4 mb-0">
+                              Register
+                            </div> */}
                           </div>
                         </form>
                       </div>
@@ -379,5 +574,22 @@ function AddMembers({ PagesText }) {
     </>
   );
 }
+
+const InputGroupText = Styled.span`
+    position: absolute !important;
+    padding: 0 0 !important;
+    right: 0 !important;
+    top: 0 !important;
+    border-right: 0 !important;
+    border-radius: 0 !important;
+    z-index: 10;
+`;
+
+const SelectField = Styled.select`
+  border-radius: 0 !important;
+  border-radius-top-left: 0 !important;
+  
+
+`;
 
 export default AddMembers;

@@ -13,7 +13,8 @@ function Profile() {
 
   const viewMember = useSelector((state) => state.members.viewMember);
   const loading = useSelector((state) => state.members.loading);
-  const { age, email, fullName, gender, houseNo, totalMembers } = viewMember;
+  const { age, email, fullName, gender, houseNo, image, totalMembers, wing } =
+    viewMember;
 
   useEffect(() => {
     if (id) {
@@ -45,7 +46,7 @@ function Profile() {
                   <div className="col-auto">
                     <div className="avatar avatar-xl position-relative">
                       <img
-                        src={Profileimg}
+                        src={image}
                         alt="profile_image"
                         className="w-100 border-radius-lg shadow-sm"
                       />
@@ -96,7 +97,7 @@ function Profile() {
                                 </li>
                                 <li className="list-group-item border-0 ps-0 text-sm">
                                   <strong className="text-dark">House:</strong>{" "}
-                                  &nbsp; {houseNo}
+                                  &nbsp; {wing}-{houseNo}
                                 </li>
                                 <li className="list-group-item border-0 ps-0 text-sm">
                                   <strong className="text-dark">Email:</strong>{" "}

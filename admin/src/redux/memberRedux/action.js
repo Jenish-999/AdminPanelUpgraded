@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { memberTypes } from "./types";
 
 // Adding Members
@@ -7,28 +8,12 @@ export const addMembers = () => {
   };
 };
 
-// const fetchAllMember = () => {
-//   return {
-//     type: FETCH_ALL_MEMBERS,
-//   };
-// };
-
-// // fetch all members
-// export const fetchAllMemberFunction = () => {
-//   return (dispatch) => {
-//     fetch(
-//       "https://jenishdemosocmember-default-rtdb.firebaseio.com/members.json"
-//     ).then((resp) =>
-//       resp.json().then((data) => dispatch(fetchAllMember(data)))
-//     );
-//   };
-// };
-
 // List Members
 export const listMembers = (data) => {
   return {
     type: memberTypes.LIST_MEMBER,
     payload: data,
+    route: "/",
   };
 };
 
@@ -62,6 +47,13 @@ export const addMemberFunction = (values) => {
     )
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
+
+        if (data.error) {
+          console.log("Err", error);
+          toast.error("Invalid Member");
+        }
+
         if (data.localId) {
           fetch(
             `https://jenishdemosocmember-default-rtdb.firebaseio.com/members/${data.localId}.json`,
@@ -72,8 +64,20 @@ export const addMemberFunction = (values) => {
                 "Content-Type": "application/json",
               },
             }
-          ).then((resp) => dispatch(listmemberFunction()));
+            // ).then((resp) => dispatch(listmemberFunction()));
+          )
+            .then((resp) => resp.json())
+            .then((data) => {
+              console.log("Add Member Data HERE", data);
+              dispatch(listmemberFunction());
+              toast.success("Member Set");
+              // dispatch(MemberIdToken(idToken));
+            });
         }
+      })
+      .catch((err) => {
+        console.log("Err", err);
+        toast.error("Invalid Member");
       });
   };
 };
@@ -92,23 +96,61 @@ export const listmemberFunction = () => {
     )
       .then((response) => response.json())
       .then((data) => {
+        console.log("ALL DATA Avab", data);
         dispatch(listMembers(data));
       });
   };
 };
 
 // Delete Member Function
-export const deleteMemberFunction = (id) => {
+export const deleteMemberFunction = (id, value) => {
+  // let value = { email, password };
+  console.log(value);
+  // console.log(memberIdToken);
   return (dispatch) => {
-    const resp = fetch(
-      `https://jenishdemosocmember-default-rtdb.firebaseio.com/members/${id}.json`,
+    fetch(
+      "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDhl3gYN-odPF7eQs1elOTJaFZrEQ2HP34",
       {
-        method: "DELETE",
+        method: "POST",
+        body: JSON.stringify(value),
         headers: {
           "Content-Type": "application/json",
         },
       }
-    );
+    )
+      .then((resp) => resp.json())
+      .then((data) => {
+        console.log("LOCAL DATA", data);
+        if (data.idToken) {
+          fetch(
+            `https://identitytoolkit.googleapis.com/v1/accounts:delete?key=AIzaSyDhl3gYN-odPF7eQs1elOTJaFZrEQ2HP34`,
+            {
+              method: "POST",
+              body: JSON.stringify({ idToken: data.idToken }),
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          )
+            .then((response) => response.json())
+            .then((data) => {
+              console.log("RAW DATA", data);
+              console.log("USER TI DELETE : ", id);
+            });
+          fetch(
+            `https://jenishdemosocmember-default-rtdb.firebaseio.com/members/${data.localId}.json`,
+            {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+        }
+      })
+      .catch((err) => {
+        console.log("This User Can't logIn", err);
+      });
   };
 };
 
@@ -126,6 +168,7 @@ export const viewMemberFunction = (id) => {
     )
       .then((response) => response.json())
       .then((data) => {
+        console.log("Particular Member : ", data);
         dispatch(viewMember(data));
       });
   };
