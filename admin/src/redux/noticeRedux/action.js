@@ -10,14 +10,16 @@ export const noticesuccessStorageAction = (result) => {
   };
 };
 
+// --------------------------------------
+
 // Notice Success Send Function
-export const noticeSuccessSendFunction = (values) => {
+export const noticeSuccessSendFunction = (attachedValues) => {
   return (dispatch) => {
     fetch(
       `https://jenishdemosocmember-default-rtdb.firebaseio.com/noticeMaster.json`,
       {
         method: "POST",
-        body: JSON.stringify(values),
+        body: JSON.stringify(attachedValues),
         headers: {
           "Content-Type": "application/json",
         },
@@ -28,13 +30,163 @@ export const noticeSuccessSendFunction = (values) => {
         console.log("RESULT : ", result);
         if (result) {
           toast.success("Notice Save");
-          // dispatch(singleNoticeStorageFunction(values));
+          // dispatch(singleNoticeStorageFunction(attachedValues));
         }
       })
       .catch((err) => {
         console.log("ERR : ", err);
         toast.error("Notice Error");
       });
+  };
+};
+
+// -------------------------------------------------
+// section which will change the active class from false to true
+export const changeNoticeMasterIsActiveFunction = (e, id) => {
+  return (dispatch) => {
+    fetch(
+      `https://jenishdemosocmember-default-rtdb.firebaseio.com/noticeMaster/${id}.json`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((resp) => resp.json())
+      .then((result) => {
+        console.log("My Result From Sctive : ", result);
+        const isActive = result.isActive;
+        const description = result.description;
+        // console.log("Class & Desp : ", isActive, description);
+        const newObjectToUpdate = {
+          isActive: true,
+          description: description,
+        };
+        console.log("Final Obj : ", newObjectToUpdate);
+        if (result) {
+          fetch(
+            `https://jenishdemosocmember-default-rtdb.firebaseio.com/noticeMaster/${id}.json`,
+            {
+              method: "PUT",
+              body: JSON.stringify(newObjectToUpdate),
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          )
+            .then((resp) => resp.json())
+            .then((respp) => {
+              console.log("Result Version from On ....", respp);
+              if (respp) {
+                fetch(
+                  `https://jenishdemosocmember-default-rtdb.firebaseio.com/noticeDisplay/${id}.json`,
+                  {
+                    method: "PUT",
+                    body: JSON.stringify(respp),
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                  }
+                )
+                  .then((resp) => resp.json())
+                  .then((displayResult) => {
+                    console.log("Notice is displaying...");
+                    toast.success("Notice is Enable...");
+                  })
+                  .catch((err) => {
+                    console.log("Notice could'nt be display!!");
+                  });
+              }
+            });
+        }
+      });
+  };
+};
+// section which will change the active class from true to false
+export const changeNoticeMasterToFalseFunction = (e, id) => {
+  return (dispatch) => {
+    fetch(
+      `https://jenishdemosocmember-default-rtdb.firebaseio.com/noticeMaster/${id}.json`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((resp) => resp.json())
+      .then((mainResult) => {
+        console.log("My Result From Sctive : ", mainResult);
+        const isActive = mainResult.isActive;
+        const description = mainResult.description;
+        // console.log("Class & Desp : ", isActive, description);
+        const newObjectToUpdate = {
+          isActive: false,
+          description: description,
+        };
+        console.log("Final Obj : ", newObjectToUpdate);
+        if (mainResult) {
+          fetch(
+            `https://jenishdemosocmember-default-rtdb.firebaseio.com/noticeMaster/${id}.json`,
+            {
+              method: "PUT",
+              body: JSON.stringify(newObjectToUpdate),
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          )
+            .then((resp) => resp.json())
+            .then((respp) => {
+              console.log("Result Version from Off ....", respp);
+              fetch(
+                `https://jenishdemosocmember-default-rtdb.firebaseio.com/noticeDisplay/${id}.json`,
+                {
+                  method: "PUT",
+                  body: JSON.stringify(respp),
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                }
+              )
+                .then((resp) => resp.json())
+                .then((displayResult) => {
+                  console.log("Notice is displaying...");
+                  toast.success("Notice Disabled...");
+                })
+                .catch((err) => {
+                  console.log("Notice could'nt be display!!");
+                });
+            });
+        }
+      });
+  };
+};
+// -------------------------------------------------
+
+// Notice Display Data Store on Switch ON
+export const noticeDisplaySuccessSendFunction = (e, id, result) => {
+  return (dispatch) => {
+    if (e === true) {
+      fetch(
+        `https://jenishdemosocmember-default-rtdb.firebaseio.com/noticeDisplay/${id}.json`,
+        {
+          method: "PUT",
+          body: JSON.stringify(result),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+        .then((resp) => resp.json())
+        .then((dispResult) => {
+          console.log("Display Result : ", dispResult);
+        })
+        .catch((err) => {
+          console.log("Error From Display Result : ", err);
+        });
+    }
   };
 };
 
@@ -60,56 +212,6 @@ export const noticeSuccessStorageFunction = () => {
     //   console.log("ERR : ", err);
     //   toast.error("Notice Error");
     // });
-  };
-};
-
-// Notice Success Data Delete Function from Notice Master
-export const noticeSuccessDeleteFunction = (id) => {
-  return (dispatch) => {
-    //Delete data from Notice Master
-    fetch(
-      `https://jenishdemosocmember-default-rtdb.firebaseio.com/noticeMaster/${id}.json`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((resp) => resp.json())
-      .then((result) => {
-        if (result) {
-          console.log("Finally data is Deleted : ", result);
-          toast.success("Notice Admin Data Deleted");
-        }
-      })
-      .catch((err) => {
-        toast.error(err);
-      });
-  };
-};
-
-// Notice Success Data Delete Function From Notice Display
-export const noticeDeleteNoticeDisplay = (id) => {
-  return (dispatch) => {
-    fetch(
-      `https://jenishdemosocmember-default-rtdb.firebaseio.com/noticeDisplay/${id}.json`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((resp) => resp.json())
-      .then((noticeDeleteResult) => {
-        console.log("Display Data Deleted : ", noticeDeleteResult);
-        toast.success("Notice Data Display Deleted ");
-      })
-      .catch((err) => {
-        toast.error(err);
-        console.Console.log("Error Display Notice Delete", err);
-      });
   };
 };
 
@@ -148,27 +250,54 @@ export const singleNoticeStorageFunction = (e, id) => {
   };
 };
 
-// Notice Display Data Store on Switch ON
-export const noticeDisplaySuccessSendFunction = (e, id, result) => {
+// Notice Success Data Delete Function from Notice Master
+export const noticeSuccessDeleteFunction = (id) => {
   return (dispatch) => {
-    if (e === true) {
-      fetch(
-        `https://jenishdemosocmember-default-rtdb.firebaseio.com/noticeDisplay/${id}.json`,
-        {
-          method: "PUT",
-          body: JSON.stringify(result),
-          headers: {
-            "Content-Type": "application/json",
-          },
+    //Delete data from Notice Master
+    fetch(
+      `https://jenishdemosocmember-default-rtdb.firebaseio.com/noticeMaster/${id}.json`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((resp) => resp.json())
+      .then((result) => {
+        if (result) {
+          console.log("Finally data is Deleted : ", result);
+          toast.success("Notice Admin Data Deleted");
         }
-      )
-        .then((resp) => resp.json())
-        .then((dispResult) => {
-          console.log("Display Result : ", dispResult);
-        })
-        .catch((err) => {
-          console.log("Error From Display Result : ", err);
-        });
-    }
+      })
+      .catch((err) => {
+        toast.error(err);
+      });
+
+    dispatch(noticeDeleteNoticeDisplay(id));
+  };
+};
+
+// Notice Success Data Delete Function From Notice Display
+export const noticeDeleteNoticeDisplay = (id) => {
+  return (dispatch) => {
+    fetch(
+      `https://jenishdemosocmember-default-rtdb.firebaseio.com/noticeDisplay/${id}.json`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((resp) => resp.json())
+      .then((noticeDeleteResult) => {
+        console.log("Display Data Deleted : ", noticeDeleteResult);
+        toast.success("Notice Data Display Deleted ");
+      })
+      .catch((err) => {
+        toast.error(err);
+        console.Console.log("Error Display Notice Delete", err);
+      });
   };
 };

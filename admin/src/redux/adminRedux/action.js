@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { adminTypes } from "./types";
 
 // Admin Login
@@ -51,6 +52,9 @@ export const adminLoginFunction = (values) => {
             localStorage.setItem("adminLogin", "true");
             dispatch(adminLogin());
             dispatch(adminIdToken(data.idToken));
+            toast.success("Welcome Admin.");
+          } else {
+            toast.error("Try later!!");
           }
         }
         if (data.error) {

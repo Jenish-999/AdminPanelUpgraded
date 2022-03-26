@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Styled from "styled-components";
-import pexelImg1 from "../assets/img/customImgs/pexelImg1.jpg";
+// import pexelImg1 from "../assets/img/customImgs/pexelImg1.jpg";
 import {
   noticeDeleteNoticeDisplay,
   noticeDisplaySuccessSendFunction,
@@ -11,6 +11,9 @@ import {
   noticeSuccessSendFunction,
   noticeSuccessStorageFunction,
   singleNoticeStorageFunction,
+  changeNoticeMasterIsActiveFunction,
+  changeNoticeMasterToTrueFunction,
+  changeNoticeMasterToFalseFunction,
 } from "../redux/noticeRedux/action";
 
 function EventNoticeComponent() {
@@ -33,8 +36,9 @@ function EventNoticeComponent() {
     },
     validate,
     onSubmit: (values, { resetForm }) => {
-      console.log({ values, isActive: false });
-      const attachedValues = { values, isActive: false };
+      // console.log({ values, isActive: false });
+      const description = values.description;
+      const attachedValues = { description, isActive: false };
       if (attachedValues) {
         dispatch(noticeSuccessSendFunction(attachedValues));
         resetForm(values);
@@ -50,7 +54,7 @@ function EventNoticeComponent() {
         console.log("Hello I am delete");
         console.log("ID", id);
         dispatch(noticeSuccessDeleteFunction(id));
-        dispatch(noticeDeleteNoticeDisplay(id));
+        // dispatch(noticeDeleteNoticeDisplay(id));
         dispatch(noticeSuccessStorageFunction());
       }
     }
@@ -64,15 +68,17 @@ function EventNoticeComponent() {
     console.log(e, id);
     if (e === true) {
       console.log("Redirect to other Page");
-      dispatch(singleNoticeStorageFunction(e, id));
+      // dispatch(singleNoticeStorageFunction(e, id));
+      dispatch(changeNoticeMasterIsActiveFunction(e, id));
     } else {
       console.log("No");
       // dispatch(noticeDeleteNoticeDisplay(id));
+      dispatch(changeNoticeMasterToFalseFunction(e, id));
     }
   };
 
   // const [ischecked, setIsChecked] = useState(true);
-  console.log("SOME KNKDJNKJN : : : ", noticeDataStorage);
+  console.log("NoticeDataStorage : ", noticeDataStorage);
 
   return (
     <>
@@ -100,7 +106,7 @@ function EventNoticeComponent() {
                 <div className="event_title">
                   <div className="event_title_flex  ">
                     {/* <p>Subject : Members Meeting</p> */}
-                    <p>{noticeDataStorage[id].values.description}</p>
+                    <p>{noticeDataStorage[id].description}</p>
                   </div>
                   <div className="form-check form-switch">
                     <input
@@ -108,7 +114,9 @@ function EventNoticeComponent() {
                       type="checkbox"
                       id="flexSwitchCheckChecked"
                       name="switching"
-                      // checked={ischecked ? "checked" : ""}
+                      defaultChecked={
+                        noticeDataStorage[id].isActive ? "checked" : ""
+                      }
                       onClick={(e) => handleCheckbox(e.target.checked, id)}
                     />
                   </div>

@@ -133,7 +133,7 @@ function AddMembers({ PagesText }) {
         toast.error("Recheck your password");
       } else {
         console.log("Simple Values: ", values);
-        // setLoadingState(true);
+        setLoadingState(true);
         // console.log("Upgrade Values: ", upgradeValues);
         const uploadImg = storage
           .ref(`profiles/${profileImage.name}`)
