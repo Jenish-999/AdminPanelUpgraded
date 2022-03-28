@@ -54,12 +54,16 @@ export const adminLoginFunction = (values) => {
             dispatch(adminIdToken(data.idToken));
             toast.success("Welcome Admin.");
           } else {
-            toast.error("Try later!!");
+            toast.error("Try later!! ");
           }
         }
         if (data.error) {
           dispatch(adminLoginFail());
+          toast.error("Try later!!");
         }
+      })
+      .catch((err) => {
+        toast.error("Try later!!");
       });
   };
 };
