@@ -160,6 +160,9 @@ function Inquiry() {
                                                 <i className="material-icons opacity-10">
                                                   person
                                                 </i>
+                                                <i className="material-icons opacity-10">
+                                                  reply
+                                                </i>
                                               </div>
                                               <div className="text-end pt-1">
                                                 <div className="d-flex flex-column justify-content-center">

@@ -12,6 +12,7 @@ import {
 import Styled from "styled-components";
 import { toast } from "react-toastify";
 import { inquiryMemberDetailsFunction } from "../redux/inquiryRedux/action";
+// import { DataGrid } from '@mui/x-data-grid';
 
 function Dashboard() {
   const memberList = useSelector((state) => state.members.addMemberData);
