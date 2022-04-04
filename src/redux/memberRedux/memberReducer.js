@@ -11,10 +11,6 @@ export const memberReducer = (
   state = initialState,
   { type, payload, route }
 ) => {
-  // if (type === "MEMBERS_ADDED") {
-  //   return { ...state,  };
-  // }
-
   if (type === memberTypes.LIST_MEMBER) {
     return {
       ...state,

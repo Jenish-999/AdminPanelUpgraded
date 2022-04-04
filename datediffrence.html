@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // FIRST
+      //   const date1 = new Date("7/13/2010");
+      //   const date2 = new Date("12/15/2010");
+      //   const diffTime = Math.abs(date2 - date1);
+      //   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      //   console.log(diffTime + " milliseconds");
+      //   console.log(diffDays + " days");
+      // const date1 = new Date("3/9/2022");
+      // const date2 = new Date("3/15/2022");
+      // console.log("MATH", Math.abs(date1));
+      // console.log("MATH", Math.abs(date1) / (1000 * 60 * 60 * 24));
+      //   const diffTime = Math.abs(date2 - date1);
+      //   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      //   console.log(diffTime + " milliseconds");
+      //   console.log(diffDays * 50 + " days");
+
+      // SECOND
+      const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+      console.log("MSPERDAY", _MS_PER_DAY);
+      // a and b are javascript Date objects
+      function dateDiffInDays(a, b) {
+        // Discard the time and time-zone information.
+        const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+        const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+
+        return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+      }
+      // test it
+      let a = new Date("2017-01-01"),
+        b = new Date("2017-01-08"),
+        difference = dateDiffInDays(a, b);
+      console.log("DIFF", difference);
+      if (difference < 9 || difference === 9) {
+        difference = 0;
+        console.log("No Penalty ", difference);
+      } else {
+        console.log("DIFF", difference * 50);
+      }
+
+      // THIRD
+      var months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      var d = new Date();
+      var monthName = months[d.getMonth()]; // "July" (or current month)
+      const year = new Date().getFullYear();
+      const month = new Date().getMonth() + 1;
+      console.log("YEAR:", year, "MONTH:", month);
+    </script>
+  </body>
+</html>

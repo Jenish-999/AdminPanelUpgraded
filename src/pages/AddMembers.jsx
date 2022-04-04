@@ -182,7 +182,6 @@ function AddMembers({ PagesText }) {
                             };
                             dispatch(addMemberFunction(upgradeValues));
                             setLoadingState(false);
-                            toast.success("success");
                             resetForm(values);
                           }
                         })
@@ -215,6 +214,11 @@ function AddMembers({ PagesText }) {
         <Headernavbar />
         <main className="main-content  mt-0">
           <section>
+            {/* <div className="row overflow-hidden"> */}
+            {/* <div className="col-md-12 bg-gradient-dark text-center text-capitaized align-items-center">
+                <h3 className="text-light">Add Members</h3>
+              </div> */}
+            {/* <div className="row"> */}
             <div className="page-header min-vh-100">
               <div className="container">
                 <div className="row h-100 position-relative">
@@ -228,12 +232,14 @@ function AddMembers({ PagesText }) {
                     ></div>
                   </div>
                   <div className="col-xl-4 col-lg-5 col-md-7 d-flex flex-column ms-auto me-auto ms-lg-auto me-lg-5 justify-content-center">
-                    <div className="card card-plain">
-                      <div className="card-header">
-                        <h4 className="font-weight-bolder">Add One</h4>
-                        <p className="mb-0">Enroll to live digitally</p>
+                    <div className="card card-plain border">
+                      <div className="card-header pb-0 bg-gradient-dark">
+                        <h4 className="font-weight-bolder text-light">
+                          Add Member
+                        </h4>
+                        {/* <p className="mb-0">Enroll to live digitally</p> */}
                       </div>
-                      <div className="card-body">
+                      <div className="card-body pt-2">
                         <form
                           role="form"
                           className="md-form"
@@ -241,8 +247,8 @@ function AddMembers({ PagesText }) {
                         >
                           <label className="text-secondary">Profile</label>
                           <div className="input-group input-group-outline">
-                            <div className="btn btn-gradient-primary border btn-sm ">
-                              <span>
+                            <div className="btn btn-gradient-primary border btn-sm w-100 rounded-0">
+                              <span className="float-left">
                                 {/* Choose files */}
                                 <input
                                   type="file"
@@ -256,12 +262,12 @@ function AddMembers({ PagesText }) {
                           </div>
                           <label className="text-secondary">IdProof</label>
                           <div className="input-group input-group-outline"></div>
-                          <div className="btn btn-gradient-primary border btn-sm ">
-                            <span>
+                          <div className="btn btn-gradient-primary border btn-sm w-100 rounded-0">
+                            <span className="float-left">
                               {/* Choose files */}
                               <input
                                 type="file"
-                                className="btn-gradient-primary"
+                                className="btn-gradient-primary "
                                 name="idProofImg"
                                 accept=".png, .jpg, .jpeg"
                                 onChange={handleChangeImageIdProof}
@@ -354,7 +360,6 @@ function AddMembers({ PagesText }) {
                               ) : null}
                             </small>
                           </div>
-
                           <div className="input-group input-group-outline mt-3">
                             <input
                               type="number"
@@ -504,6 +509,7 @@ function AddMembers({ PagesText }) {
                               ) : null}
                             </small>
                           </div>
+
                           <div className="form-check form-check-info text-start ps-0 mt-3">
                             <input
                               className="form-check-input"
@@ -567,6 +573,8 @@ function AddMembers({ PagesText }) {
                 </div>
               </div>
             </div>
+            {/* </div> */}
+            {/* </div> */}
           </section>
         </main>
         <Footer />

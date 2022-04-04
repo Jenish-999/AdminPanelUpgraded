@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Bgprofileimg from "../assets/img/profile-bg-img-3.jpg";
 import Profileimg from "../assets/img/bruce-mars.jpg";
 import Footer from "./Footer";
@@ -7,6 +7,12 @@ import Wrapper from "../component/Wapper";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { viewMemberFunction } from "../redux/memberRedux/action";
+import { useFormik } from "formik";
+import {
+  addMaintenanceSuccess,
+  fetchMaintenanceFunction,
+} from "../redux/maintenanceRedux/action";
+import MaintenceModal from "../component/MaintenceModal";
 function Profile() {
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -15,6 +21,9 @@ function Profile() {
   const loading = useSelector((state) => state.members.loading);
   const { age, email, fullName, gender, houseNo, image, totalMembers, wing } =
     viewMember;
+  const addMaintenanceStorage = useSelector(
+    (state) => state.maintenance.addMaintenanceStorage
+  );
 
   useEffect(() => {
     if (id) {
@@ -26,7 +35,36 @@ function Profile() {
     };
   }, [id]);
 
-  console.log(viewMember);
+  const [memberNameState, setMemberNameState] = useState("");
+
+  useEffect(() => {
+    if (viewMember) {
+      setMemberNameState(viewMember);
+    }
+  }, [viewMember]);
+
+  const [dueDateState, setDueDateState] = useState();
+  useEffect(() => {
+    dispatch(fetchMaintenanceFunction(id));
+    Object.keys(addMaintenanceStorage).map((id, indx) => {
+      setDueDateState(addMaintenanceStorage[id].dueDate);
+    });
+    dispatch({ type: "EMPTY_DATA_MAINTENANCE" });
+  }, []);
+  let months = [
+    "January",
+    "Febuary",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
 
   return (
     <>
@@ -42,25 +80,44 @@ function Profile() {
               <h1>Loading...</h1>
             ) : (
               <div className="card card-body mx-3 mx-md-4 mt-n6">
-                <div className="row gx-4 mb-2">
-                  <div className="col-auto">
-                    <div className="avatar avatar-xl position-relative">
-                      <img
-                        src={image}
-                        alt="profile_image"
-                        className="w-100 border-radius-lg shadow-sm"
-                      />
+                <div className="row gx-4 mb-2  ">
+                  {loading && loading ? (
+                    <div className="spinner-border text-dark" role="status">
+                      <span className="sr-only">Loading...</span>
                     </div>
-                  </div>
-                  <div className="col-auto my-auto">
-                    <div className="h-100">
-                      <h5 className="mb-1 text-uppercase">{fullName}</h5>
-                      <p className="mb-0 font-weight-normal text-sm">
-                        Email / {email}
-                      </p>
+                  ) : (
+                    <div className="col-lg-6  d-flex  align-self-center justify-content-start">
+                      <div className="avatar avatar-xl position-relative">
+                        <img
+                          src={image}
+                          alt="profile_image"
+                          className="w-100 border-radius-lg shadow-sm"
+                        />
+                      </div>
+
+                      <div className="h-100 ml-2">
+                        <h5 className="mb-1 text-uppercase">{fullName}</h5>
+                        <p className="mb-0 font-weight-normal text-sm">
+                          Email / {email}
+                        </p>
+                      </div>
                     </div>
+                  )}
+
+                  <div className="col-lg-6 my-auto  d-flex flex-row-reverse">
+                    <button
+                      className="btn btn-primary"
+                      data-toggle="modal"
+                      data-target="#exampleModalCenter"
+                    >
+                      <i className="material-icons opacity-10">
+                        control_point_duplicate
+                      </i>
+                      Maintenance
+                    </button>
                   </div>
                 </div>
+
                 <div className="row">
                   <div className="row">
                     <div className="col-12 col-xl-4">
@@ -154,62 +211,49 @@ function Profile() {
                         </div>
                         <div className="card-body p-3">
                           <ul className="list-group">
-                            <li className="list-group-item border-0 d-flex align-items-center px-0 mb-2 pt-0">
-                              <div className="d-flex align-items-start flex-column justify-content-center">
-                                <h6 className="mb-0 text-sm">March</h6>
-                                <p className="mb-0 text-xs">
-                                  Due date 26/05/22
-                                </p>
-                              </div>
-                              <a
-                                className="btn btn-link pe-3 ps-0 mb-0 ms-auto w-25 w-md-auto"
-                                href="/"
-                              >
-                                Print
-                              </a>
-                            </li>
-                            <li className="list-group-item border-0 d-flex align-items-center px-0 mb-2 pt-0">
-                              <div className="d-flex align-items-start flex-column justify-content-center">
-                                <h6 className="mb-0 text-sm">April</h6>
-                                <p className="mb-0 text-xs">
-                                  Due date 26/05/22
-                                </p>
-                              </div>
-                              <a
-                                className="btn btn-link pe-3 ps-0 mb-0 ms-auto w-25 w-md-auto"
-                                href="/"
-                              >
-                                Print
-                              </a>
-                            </li>
-                            <li className="list-group-item border-0 d-flex align-items-center px-0 mb-2 pt-0">
-                              <div className="d-flex align-items-start flex-column justify-content-center">
-                                <h6 className="mb-0 text-sm">June</h6>
-                                <p className="mb-0 text-xs">
-                                  Due date 26/05/22
-                                </p>
-                              </div>
-                              <a
-                                className="btn btn-link pe-3 ps-0 mb-0 ms-auto w-25 w-md-auto"
-                                href="/"
-                              >
-                                Print
-                              </a>
-                            </li>
-                            <li className="list-group-item border-0 d-flex align-items-center px-0 mb-2 pt-0">
-                              <div className="d-flex align-items-start flex-column justify-content-center">
-                                <h6 className="mb-0 text-sm">July</h6>
-                                <p className="mb-0 text-xs">
-                                  Due date 26/05/22
-                                </p>
-                              </div>
-                              <a
-                                className="btn btn-link pe-3 ps-0 mb-0 ms-auto w-25 w-md-auto"
-                                href="/"
-                              >
-                                Print
-                              </a>
-                            </li>
+                            {Object.keys(addMaintenanceStorage).map((id) => {
+                              var d = new Date(
+                                addMaintenanceStorage[id].dueDate
+                              );
+                              var monthName = months[d.getMonth()]; // "July" (or current month)
+                              return (
+                                <li
+                                  key={id}
+                                  className="list-group-item shadow p-1 border-0 d-flex align-items-center mb-2 pt-0"
+                                >
+                                  <div className="d-flex align-items-start flex-column justify-content-center">
+                                    <div className="d-flex justify-content-between  align-items-center">
+                                      <h6 className="mb-0 mr-2 text-sm">
+                                        {monthName}
+                                      </h6>
+                                      <h6 className="mb-0 ml-2 text-sm">
+                                        {addMaintenanceStorage[id].annualAmt}/-
+                                      </h6>
+                                    </div>
+                                    <ul className="pl-1 list-unstyled">
+                                      <li className="mb-1 text-xs">
+                                        Paid date :{" "}
+                                        {addMaintenanceStorage[id].currentDate}
+                                      </li>
+                                      <li className="mb-1 text-xs">
+                                        Due date :{" "}
+                                        {addMaintenanceStorage[id].dueDate}
+                                      </li>
+                                      <li className="mb-1 text-xs">
+                                        Penalty :{" "}
+                                        {addMaintenanceStorage[id].panelty}/-
+                                      </li>
+                                    </ul>
+                                  </div>
+                                  <a
+                                    className="btn btn-link pe-3 ps-0 mb-0 ms-auto w-25 w-md-auto"
+                                    href="/"
+                                  >
+                                    Print
+                                  </a>
+                                </li>
+                              );
+                            })}
                           </ul>
                         </div>
                       </div>
@@ -219,6 +263,7 @@ function Profile() {
               </div>
             )}
           </div>
+          <MaintenceModal fullName={fullName} id={id} />
           <Footer />
         </div>
       </Wrapper>

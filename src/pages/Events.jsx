@@ -88,9 +88,7 @@ function Events() {
   return (
     <>
       <Wrapper>
-        {/* <Navbar /> */}
         <main className="main-content position-relative max-height-vh-100 h-100  ">
-          {/* Navbar */}
           <Breadcrumb PagesText="Events" />
 
           <MainContainer className="container-fluid my-2 py-4 float-left">

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Footer from "./Footer";
 import Breadcrumb from "../component/Breadcrumb";
@@ -12,7 +12,6 @@ import {
 import Styled from "styled-components";
 import { toast } from "react-toastify";
 import { inquiryMemberDetailsFunction } from "../redux/inquiryRedux/action";
-// import { DataGrid } from '@mui/x-data-grid';
 
 function Dashboard() {
   const memberList = useSelector((state) => state.members.addMemberData);
@@ -29,32 +28,34 @@ function Dashboard() {
   const [searchResult, setSearchResult] = useState();
 
   // Handle FinalList
-  const finalList = Object.keys(list.memberList).map((id, index) => {
-    // console.log("Full Lenght DAta", list.memberList[id].fullName);
-    let result = list.memberList[id];
-    return result;
-  });
+  const finalList =
+    memberList &&
+    Object.keys(list.memberList).map((id, index) => {
+      let result = list.memberList[id];
+      return result;
+    });
 
   // Search Handler
   const searchHandler = (e) => {
     setSearchField(e.target.value);
 
     if (searchField !== "") {
-      const newMemberList = finalList.filter((item) => {
-        // console.log("ITEM", item.fullName);
-        console.log(
-          "NewMemberFilter : ",
-          Object.values(item.fullName)
+      const newMemberList =
+        finalList &&
+        finalList.filter((item) => {
+          console.log(
+            "NewMemberFilter : ",
+            Object.values(item.fullName)
+              .join("")
+              .toLowerCase()
+              .includes(searchField.toLowerCase())
+          );
+
+          return Object.values(item.fullName)
             .join("")
             .toLowerCase()
-            .includes(searchField.toLowerCase())
-        );
-
-        return Object.values(item.fullName)
-          .join("")
-          .toLowerCase()
-          .includes(searchField.toLowerCase());
-      });
+            .includes(searchField.toLowerCase());
+        });
       // ;
       return setSearchResult(newMemberList);
     }
@@ -64,12 +65,17 @@ function Dashboard() {
   console.log("Final List : ", finalList);
   console.log("Search Result : ", searchResult);
 
+  let memberID =
+    memberList &&
+    Object.keys(memberList).map((id) => {
+      return id;
+    });
+
   const handleDelete = (id, email, password) => {
     console.log(id, email, password);
     if (email && password) {
       console.log(email, password);
       dispatch(deleteMemberFunction(id, { email, password }));
-      dispatch(listmemberFunction());
       toast.success("Deleted!");
     } else {
       toast.error("Try,later");
@@ -82,10 +88,21 @@ function Dashboard() {
     dispatch(inquiryMemberDetailsFunction());
   }, []);
 
+  // States for showMore func
+  const [memberItem] = useState(memberList);
+  let defaultValue = 3;
+  const [noOfItemShown, setNoOfItemShown] = useState(defaultValue);
+  // handleShowMore func
+  const handleShowMore = () => {
+    setNoOfItemShown(noOfItemShown + 3);
+
+    console.log("Member List on Click : ", memberItem);
+  };
+
   return (
     <>
       <Wrapper>
-        <main className="main-content position-relative max-height-vh-100 h-100  ">
+        <main className="main-content position-relative max-height-vh-100 h-100">
           <Breadcrumb PagesText="Dashboard" />
           <div className="container-fluid py-4">
             <div className="row mb-5">
@@ -147,7 +164,7 @@ function Dashboard() {
                 </div>
               </div>
             </div>
-            <div className="row">
+            <div className="row overflow-hidden">
               <div className="col-12">
                 <div className="card my-4">
                   <div className="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
@@ -195,7 +212,7 @@ function Dashboard() {
                     </div>
                   </div>
                   <div className="card-body px-0 pb-2">
-                    <div className="table-responsive p-0">
+                    <div className="table-responsive p-0  overflow-hidden">
                       <table className="table  align-items-center mb-0">
                         <thead>
                           <tr>
@@ -239,83 +256,85 @@ function Dashboard() {
                             </tr>
                           ) : memberList && memberList.length !== 0 ? (
                             searchField.length < 1 ? (
-                              Object.keys(memberList).map((id, index) => {
-                                return (
-                                  <tr key={id}>
-                                    <td>
-                                      <h6>{index + 1}</h6>
-                                    </td>
-                                    <td>
-                                      <div className="d-flex px-2 py-1">
-                                        <div>
-                                          <ImgTag
-                                            src={memberList[id].image}
-                                            className="avatar avatar-lg me-3"
-                                            alt="user1"
-                                          />
+                              Object.keys(memberList)
+                                .slice(0, noOfItemShown)
+                                .map((id, index) => {
+                                  return (
+                                    <tr key={id}>
+                                      <td>
+                                        <h6>{index + 1}</h6>
+                                      </td>
+                                      <td>
+                                        <div className="d-flex px-2 py-1">
+                                          <div>
+                                            <ImgTag
+                                              src={memberList[id].image}
+                                              className="avatar avatar-lg me-3"
+                                              alt="user1"
+                                            />
+                                          </div>
+                                          <div className="d-flex flex-column justify-content-center">
+                                            <h6 className="mb-0 text-sm">
+                                              {memberList[id].fullName}
+                                            </h6>
+                                          </div>
                                         </div>
-                                        <div className="d-flex flex-column justify-content-center">
-                                          <h6 className="mb-0 text-sm">
-                                            {memberList[id].fullName}
-                                          </h6>
-                                        </div>
-                                      </div>
-                                    </td>
-                                    <td>
-                                      <p className="text-xs font-weight-bold mb-0">
-                                        {memberList[id].email}
-                                      </p>
-                                    </td>
-                                    <td>
-                                      <p className="text-xs font-weight-bold mb-0">
-                                        {memberList[id].wing}-
-                                        {memberList[id].houseNo}
-                                      </p>
-                                    </td>
-                                    <td>
-                                      <p className="text-xs font-weight-bold mb-0">
-                                        {memberList[id].totalMembers}
-                                      </p>
-                                    </td>
-                                    <td>
-                                      <p className="text-xs font-weight-bold mb-0">
-                                        {memberList[id].age}
-                                      </p>
-                                    </td>
-                                    <td>
-                                      <p className="text-xs font-weight-bold mb-0">
-                                        {memberList[id].gender}
-                                      </p>
-                                    </td>
-                                    <td className="align-middle text-center">
-                                      <span className="text-secondary text-xs font-weight-bold">
-                                        {new Date().toDateString()}
-                                      </span>
-                                    </td>
-                                    <td className="align-middle text-center text-sm cursor-pointer">
-                                      <Link to={`/Profile/${id}`}>
-                                        <span className="badge badge-sm bg-gradient-success">
-                                          View
+                                      </td>
+                                      <td>
+                                        <p className="text-xs font-weight-bold mb-0">
+                                          {memberList[id].email}
+                                        </p>
+                                      </td>
+                                      <td>
+                                        <p className="text-xs font-weight-bold mb-0">
+                                          {memberList[id].wing}-
+                                          {memberList[id].houseNo}
+                                        </p>
+                                      </td>
+                                      <td>
+                                        <p className="text-xs font-weight-bold mb-0">
+                                          {memberList[id].totalMembers}
+                                        </p>
+                                      </td>
+                                      <td>
+                                        <p className="text-xs font-weight-bold mb-0">
+                                          {memberList[id].age}
+                                        </p>
+                                      </td>
+                                      <td>
+                                        <p className="text-xs font-weight-bold mb-0">
+                                          {memberList[id].gender}
+                                        </p>
+                                      </td>
+                                      <td className="align-middle text-center">
+                                        <span className="text-secondary text-xs font-weight-bold">
+                                          {new Date().toDateString()}
                                         </span>
-                                      </Link>
-                                    </td>
-                                    <td
-                                      className="align-middle text-center text-sm cursor-pointer"
-                                      onClick={() =>
-                                        handleDelete(
-                                          id,
-                                          memberList[id].email,
-                                          memberList[id].password
-                                        )
-                                      }
-                                    >
-                                      <span className="badge badge-sm bg-gradient-danger">
-                                        Delete
-                                      </span>
-                                    </td>
-                                  </tr>
-                                );
-                              })
+                                      </td>
+                                      <td className="align-middle text-center text-sm cursor-pointer">
+                                        <Link to={`/Profile/${id}`}>
+                                          <span className="badge badge-sm bg-gradient-success">
+                                            View
+                                          </span>
+                                        </Link>
+                                      </td>
+                                      <td
+                                        className="align-middle text-center text-sm cursor-pointer"
+                                        onClick={() =>
+                                          handleDelete(
+                                            id,
+                                            memberList[id].email,
+                                            memberList[id].password
+                                          )
+                                        }
+                                      >
+                                        <span className="badge badge-sm bg-gradient-danger">
+                                          Delete
+                                        </span>
+                                      </td>
+                                    </tr>
+                                  );
+                                })
                             ) : searchResult && searchResult.length !== 0 ? (
                               Object.keys(searchResult).map((id, index) => {
                                 return (
@@ -371,7 +390,9 @@ function Dashboard() {
                                       </span>
                                     </td>
                                     <td className="align-middle text-center text-sm cursor-pointer">
-                                      <Link to={`/Profile/${id}`}>
+                                      <Link
+                                        to={`/Profile/${searchResult[id].id}`}
+                                      >
                                         <span className="badge badge-sm bg-gradient-success">
                                           View
                                         </span>
@@ -406,6 +427,14 @@ function Dashboard() {
                           )}
                         </tbody>
                       </table>
+                      <div className="card-footer px-0 pb-2 text-center align-center">
+                        <button
+                          className="btn btn-primary"
+                          onClick={() => handleShowMore()}
+                        >
+                          Show More
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>

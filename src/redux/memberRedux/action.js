@@ -59,7 +59,7 @@ export const addMemberFunction = (values) => {
             `https://jenishdemosocmember-default-rtdb.firebaseio.com/members/${data.localId}.json`,
             {
               method: "PUT",
-              body: JSON.stringify(values),
+              body: JSON.stringify({ ...values, id: data.localId }),
               headers: {
                 "Content-Type": "application/json",
               },
@@ -145,7 +145,9 @@ export const deleteMemberFunction = (id, value) => {
                 "Content-Type": "application/json",
               },
             }
-          );
+          ).then((resp) => {
+            dispatch(listmemberFunction());
+          });
         }
       })
       .catch((err) => {

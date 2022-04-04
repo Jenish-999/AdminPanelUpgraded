@@ -2,6 +2,7 @@ import { combineReducers } from "redux";
 import { adminReducer } from "./adminRedux/adminReducer";
 import { eventReducer } from "./eventRedux/eventReducer";
 import { inquiryReducer } from "./inquiryRedux/inquiryReducer";
+import { maintenanceReducer } from "./maintenanceRedux/maintenanceReducer";
 import { memberReducer } from "./memberRedux/memberReducer";
 import { noticeReducer } from "./noticeRedux/noticeReducer";
 
@@ -11,4 +12,5 @@ export const rootReducer = combineReducers({
   inquiry: inquiryReducer,
   events: eventReducer,
   notice: noticeReducer,
+  maintenance: maintenanceReducer,
 });
