@@ -48,7 +48,7 @@ function EventNoticeComponent() {
   });
 
   const handleDelete = (id) => {
-    const con = confirm("Are you sure ?");
+    const con = Window.confirm("Are you sure ?");
     if (id) {
       if (con) {
         console.log("Hello I am delete");

@@ -50,7 +50,7 @@ export const addMemberFunction = (values) => {
         console.log(data);
 
         if (data.error) {
-          console.log("Err", error);
+          console.log("Err", data.error);
           toast.error("Invalid Member");
         }
 
