@@ -78,14 +78,14 @@ function Navbar() {
                 <span className="nav-link-text ms-1">Notices</span>
               </Link>
             </li>
-            {/* <li className="nav-item">
-              <Link className="nav-link text-white " to="/AddMembers">
+            <li className="nav-item">
+              <Link className="nav-link text-white " to="/Maintenance">
                 <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                  <i className="material-icons opacity-10">assignment</i>
+                  <i className="material-icons opacity-10">local_activity</i>
                 </div>
-                <span className="nav-link-text ms-1">Add Members</span>
+                <span className="nav-link-text ms-1">Maintenance</span>
               </Link>
-            </li> */}
+            </li>
           </ul>
         </div>
       </aside>

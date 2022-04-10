@@ -16,6 +16,13 @@ export const storageMembersMaintenance = (data) => {
   };
 };
 
+export const storageMaintenanceMonth = (data) => {
+  return {
+    type: types.MAINTENANCE_FETCH_MONTH_SUCCESS,
+    payload: data,
+  };
+};
+
 // Functions
 // add maintenance
 export const addMaintenanceSuccess = (
@@ -84,6 +91,7 @@ export const fetchMaintenanceFunction = (id) => {
         if (data) {
           console.log("Maintenance Data 1: ", data);
           dispatch(storageMembersMaintenance(data));
+          dispatch(storageMaintenanceMonth(data));
         }
       })
       .catch((err) => {
@@ -91,3 +99,51 @@ export const fetchMaintenanceFunction = (id) => {
       });
   };
 };
+
+// fetch all maintenance details
+export const fetchAllMaintenanceFunction = () => {
+  const year = new Date().getFullYear();
+  return (dispatch) => {
+    fetch(
+      `https://jenishdemosocmember-default-rtdb.firebaseio.com/maintenance/${year}.json`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((resp) => resp.json())
+      .then((res) => {
+        dispatch(storageMembersMaintenance(res));
+      });
+  };
+};
+
+// fetch maintenance details Month
+// export const fetchMaintenanceMonthFunction = (id) => {
+//   const year = new Date().getFullYear();
+//   const month = new Date().getMonth() + 1;
+//   console.log(year, month);
+//   return (dispatch) => {
+//     fetch(
+//       `https://jenishdemosocmember-default-rtdb.firebaseio.com/maintenance/${year}/${id}.json`,
+//       {
+//         method: "GET",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//       }
+//     )
+//       .then((resp) => resp.json())
+//       .then((data) => {
+//         if (data) {
+//           console.log("storageMaintenanceMonth : ", data);
+//           dispatch(storageMaintenanceMonth(data));
+//         }
+//       })
+//       .catch((err) => {
+//         console.log("Error Data : ", err);
+//       });
+//   };
+// };

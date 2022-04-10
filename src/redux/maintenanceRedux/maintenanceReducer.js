@@ -5,6 +5,8 @@ const initState = {
   modalFormValue: {
     firstName: "",
   },
+  monthWiseMaintenanceStorage: {},
+  loading: true,
 };
 
 export const maintenanceReducer = (state = initState, { type, payload }) => {
@@ -18,6 +20,13 @@ export const maintenanceReducer = (state = initState, { type, payload }) => {
     return {
       ...state,
       addMaintenanceStorage: payload,
+    };
+  }
+  if (type === types.MAINTENANCE_FETCH_MONTH_SUCCESS) {
+    return {
+      ...state,
+      monthWiseMaintenanceStorage: payload,
+      loading: false,
     };
   }
   if (type === "EMPTY_DATA_MAINTENANCE") {

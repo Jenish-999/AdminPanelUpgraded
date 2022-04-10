@@ -16,7 +16,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import ImageUpload from "./component/ImageUpload";
 import NoticePage from "./pages/NoticePage";
-import Extra from "./pages/Extra";
+import Maintenance from "./pages/Maintenance";
+import MaintenanceUser from "./pages/MaintenanceUser";
 
 function App() {
   return (
@@ -33,7 +34,12 @@ function App() {
         <Route exact path="/AddMembers" element={<AddMembers />} />
         <Route exact path="/Events" element={<Events />} />
         <Route exact path="/ImageUpload" element={<ImageUpload />} />
-        <Route exact path="/extra" element={<Extra />} />
+        <Route exact path="/Maintenance" element={<Maintenance />} />
+        <Route
+          exact
+          path="/maintenance-user/:id"
+          element={<MaintenanceUser />}
+        />
         <Route path="*" element={<Error404 />} />
       </Routes>
     </>
