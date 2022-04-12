@@ -4,15 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import Styled from "styled-components";
 // import pexelImg1 from "../assets/img/customImgs/pexelImg1.jpg";
 import {
-  noticeDeleteNoticeDisplay,
-  noticeDisplaySuccessSendFunction,
   noticeSuccessDeleteFunction,
-  noticeSuccessFunction,
   noticeSuccessSendFunction,
   noticeSuccessStorageFunction,
-  singleNoticeStorageFunction,
   changeNoticeMasterIsActiveFunction,
-  changeNoticeMasterToTrueFunction,
   changeNoticeMasterToFalseFunction,
 } from "../redux/noticeRedux/action";
 
@@ -51,8 +46,8 @@ function EventNoticeComponent() {
     const con = Window.confirm("Are you sure ?");
     if (id) {
       if (con) {
-        console.log("Hello I am delete");
-        console.log("ID", id);
+        // console.log("Hello I am delete");
+        // console.log("ID", id);
         dispatch(noticeSuccessDeleteFunction(id));
         // dispatch(noticeDeleteNoticeDisplay(id));
         dispatch(noticeSuccessStorageFunction());
@@ -65,20 +60,20 @@ function EventNoticeComponent() {
   }, []);
 
   const handleCheckbox = (e, id) => {
-    console.log(e, id);
+    // console.log(e, id);
     if (e === true) {
-      console.log("Redirect to other Page");
+      // console.log("Redirect to other Page");
       // dispatch(singleNoticeStorageFunction(e, id));
       dispatch(changeNoticeMasterIsActiveFunction(e, id));
     } else {
-      console.log("No");
+      // console.log("No");
       // dispatch(noticeDeleteNoticeDisplay(id));
       dispatch(changeNoticeMasterToFalseFunction(e, id));
     }
   };
 
   // const [ischecked, setIsChecked] = useState(true);
-  console.log("NoticeDataStorage : ", noticeDataStorage);
+  // console.log("NoticeDataStorage : ", noticeDataStorage);
 
   return (
     <>

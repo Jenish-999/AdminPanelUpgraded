@@ -47,10 +47,10 @@ export const addMemberFunction = (values) => {
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
 
         if (data.error) {
-          console.log("Err", data.error);
+          // console.log("Err", data.error);
           toast.error("Invalid Member");
         }
 
@@ -68,7 +68,7 @@ export const addMemberFunction = (values) => {
           )
             .then((resp) => resp.json())
             .then((data) => {
-              console.log("Add Member Data HERE", data);
+              // console.log("Add Member Data HERE", data);
               dispatch(listmemberFunction());
               toast.success("Member Set");
               // dispatch(MemberIdToken(idToken));
@@ -76,7 +76,7 @@ export const addMemberFunction = (values) => {
         }
       })
       .catch((err) => {
-        console.log("Err", err);
+        // console.log("Err", err);
         toast.error("Invalid Member");
       });
   };
@@ -96,7 +96,7 @@ export const listmemberFunction = () => {
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log("ALL DATA Avab", data);
+        // console.log("ALL DATA Avab", data);
         dispatch(listMembers(data));
       });
   };
@@ -105,7 +105,7 @@ export const listmemberFunction = () => {
 // Delete Member Function
 export const deleteMemberFunction = (id, value) => {
   // let value = { email, password };
-  console.log(value);
+  // console.log(value);
   // console.log(memberIdToken);
   return (dispatch) => {
     fetch(
@@ -120,7 +120,7 @@ export const deleteMemberFunction = (id, value) => {
     )
       .then((resp) => resp.json())
       .then((data) => {
-        console.log("LOCAL DATA", data);
+        // console.log("LOCAL DATA", data);
         if (data.idToken) {
           fetch(
             `https://identitytoolkit.googleapis.com/v1/accounts:delete?key=AIzaSyDhl3gYN-odPF7eQs1elOTJaFZrEQ2HP34`,
@@ -134,8 +134,8 @@ export const deleteMemberFunction = (id, value) => {
           )
             .then((response) => response.json())
             .then((data) => {
-              console.log("RAW DATA", data);
-              console.log("USER TI DELETE : ", id);
+              // console.log("RAW DATA", data);
+              // console.log("USER TI DELETE : ", id);
             });
           fetch(
             `https://jenishdemosocmember-default-rtdb.firebaseio.com/members/${data.localId}.json`,
@@ -151,7 +151,8 @@ export const deleteMemberFunction = (id, value) => {
         }
       })
       .catch((err) => {
-        console.log("This User Can't logIn", err);
+        // console.log("This User Can't logIn", err);
+        toast.error("This User Can't logIn", err);
       });
   };
 };
@@ -170,7 +171,7 @@ export const viewMemberFunction = (id) => {
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log("Particular Member : ", data);
+        // console.log("Particular Member : ", data);
         dispatch(viewMember(data));
       });
   };

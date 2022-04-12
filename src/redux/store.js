@@ -6,5 +6,5 @@ import logger from "redux-logger";
 
 export const store = createStore(
   rootReducer,
-  composeWithDevTools(applyMiddleware(thunk, logger))
+  composeWithDevTools(applyMiddleware(thunk))
 );

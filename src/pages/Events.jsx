@@ -44,7 +44,7 @@ function Events() {
     validate,
     onSubmit: (values, { resetForm }) => {
       if (values && values !== "") {
-        console.log("Values are : ", values);
+        // console.log("Values are : ", values);
         dispatch(eventSuccessFunction(values));
         resetForm(values);
         dispatch(eventReceiveFunction());
@@ -71,17 +71,17 @@ function Events() {
 
   useEffect(() => {
     dispatch(eventReceiveFunction());
-    console.log("EventStorage", eventStorage);
+    // console.log("EventStorage", eventStorage);
   }, []);
 
   const handleDelete = (id) => {
     const con = Window.confirm("Are you Sure you want to delete ?");
     if (con) {
-      console.log("ID to Delete : ", id);
+      // console.log("ID to Delete : ", id);
       dispatch(eventDeleteSucess(id));
       dispatch(eventReceiveFunction());
     } else {
-      console.log("No Id");
+      // console.log("No Id");
     }
   };
 

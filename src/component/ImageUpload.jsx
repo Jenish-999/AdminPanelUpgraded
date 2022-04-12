@@ -27,7 +27,7 @@ function ImageUpload() {
     e.preventDefault();
     const uploadImg = storage.ref(`images/${image.name}`).put(image);
     setImgLoading(true);
-    console.log("Submit");
+    // console.log("Submit");
     uploadImg.on(
       "state",
       (spanshot) => {},
@@ -40,7 +40,7 @@ function ImageUpload() {
           .child(image.name)
           .getDownloadURL()
           .then((url) => {
-            console.log(url);
+            // console.log(url);
             if (url) {
               fetch(
                 "https://jenishdemosoc-default-rtdb.firebaseio.com/gallery.json",
@@ -56,20 +56,20 @@ function ImageUpload() {
               )
                 .then((resp) => resp.json())
                 .then((data) => {
-                  console.log("IMAGE DATA ", data);
+                  // console.log("IMAGE DATA ", data);
                   toast.success("Image Uploaded");
                   setImage(null);
                   setImgLoading(false);
                   formRef.current.reset();
                 })
                 .catch((err) => {
-                  console.log("ERR", err);
+                  // console.log("ERR", err);
                   toast.error("IMAGE FAIL");
                 });
             }
           })
           .catch((err) => {
-            console.log("ERR", err);
+            // console.log("ERR", err);
             toast.error("IMAGE FAIL FINAL");
           });
       }
@@ -86,7 +86,7 @@ function ImageUpload() {
     })
       .then((resp) => resp.json())
       .then((data) => {
-        console.log("All Data", data);
+        // console.log("All Data", data);
         setImageData(data);
       });
   };
@@ -94,7 +94,7 @@ function ImageUpload() {
   // Delete selected images
   const handleDeleteImage = (id) => {
     if (id !== "") {
-      console.log("Id for Delete Img", id);
+      // console.log("Id for Delete Img", id);
       fetch(
         `https://jenishdemosoc-default-rtdb.firebaseio.com/gallery/${id}.json`,
         {
@@ -106,11 +106,11 @@ function ImageUpload() {
       )
         .then((resp) => resp.json())
         .then((data) => {
-          console.log("Deleted", data);
+          // console.log("Deleted", data);
         });
       getDataFunction();
     } else {
-      console.log("No Id ");
+      // console.log("No Id ");
     }
   };
 

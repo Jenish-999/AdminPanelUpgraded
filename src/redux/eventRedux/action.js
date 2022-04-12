@@ -20,7 +20,7 @@ export const eventSuccessFunction = (values) => {
     })
       .then((resp) => resp.json())
       .then((result) => {
-        console.log("Result of Data Submitted", result);
+        // console.log("Result of Data Submitted", result);
         toast.success("Event Set");
       })
       .catch((err) => {
@@ -40,7 +40,7 @@ export const eventReceiveFunction = () => {
     })
       .then((resp) => resp.json())
       .then((result) => {
-        console.log("Event Data", result);
+        // console.log("Event Data", result);
         dispatch(eventReceiveAction(result));
       })
       .catch((err) => {
@@ -63,7 +63,7 @@ export const eventDeleteSucess = (id) => {
     )
       .then((resp) => resp.json())
       .then((result) => {
-        console.log("Result : ", result);
+        // console.log("Result : ", result);
         toast.success("Event Deleted!");
         eventReceiveFunction();
       })

@@ -61,7 +61,7 @@ function MaintenceModal({ fullName, id }) {
   // handle submit
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formState);
+    // console.log(formState);
     if (formState) {
       dispatch(
         addMaintenanceSuccess(

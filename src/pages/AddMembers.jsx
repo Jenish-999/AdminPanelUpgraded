@@ -132,7 +132,7 @@ function AddMembers({ PagesText }) {
       if (values.password !== values.rePassword) {
         toast.error("Recheck your password");
       } else {
-        console.log("Simple Values: ", values);
+        // console.log("Simple Values: ", values);
         setLoadingState(true);
         // console.log("Upgrade Values: ", upgradeValues);
         const uploadImg = storage
@@ -150,7 +150,7 @@ function AddMembers({ PagesText }) {
           "state",
           (spanshot) => {},
           (err) => {
-            console.log("IMAGE PROFILE ERROR", err);
+            // console.log("IMAGE PROFILE ERROR", err);
           },
           () => {
             storage
@@ -158,13 +158,13 @@ function AddMembers({ PagesText }) {
               .child(profileImage.name)
               .getDownloadURL()
               .then((profileUrl) => {
-                console.log("PROFILE IMAGE URL : ", profileUrl);
+                // console.log("PROFILE IMAGE URL : ", profileUrl);
                 if (profileUrl) {
                   uploadProof.on(
                     "state",
                     (spanshot) => {},
                     (err) => {
-                      console.log("ID PROOF ERROR", err);
+                      // console.log("ID PROOF ERROR", err);
                     },
                     () => {
                       storage
@@ -172,9 +172,9 @@ function AddMembers({ PagesText }) {
                         .child(idProofImage.name)
                         .getDownloadURL()
                         .then((ProofUrl) => {
-                          console.log("ID PROOF URL : ", ProofUrl);
+                          // console.log("ID PROOF URL : ", ProofUrl);
                           if (ProofUrl) {
-                            console.log("PROFILE URL : ", profileUrl);
+                            // console.log("PROFILE URL : ", profileUrl);
                             let upgradeValues = {
                               ...values,
                               image: profileUrl,
@@ -187,7 +187,7 @@ function AddMembers({ PagesText }) {
                         })
                         .catch((err) => {
                           toast.error("Try later.");
-                          console.log("Image Error: ", err);
+                          // console.log("Image Error: ", err);
                         });
                     }
                   );
@@ -195,7 +195,7 @@ function AddMembers({ PagesText }) {
               })
               .catch((err) => {
                 toast.error("Try later.");
-                console.log("Image Error: ", err);
+                // console.log("Image Error: ", err);
               });
           }
         );

@@ -53,7 +53,7 @@ function Inquiry() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("DATa :  ", fieldState);
+    // console.log("DATa :  ", fieldState);
     emailjs
       .sendForm(
         "service_f4arwbe",
@@ -62,11 +62,11 @@ function Inquiry() {
         "9MBQwbSH7hWNgIvvg"
       )
       .then((result) => {
-        console.log("Res", result);
+        // console.log("Res", result);
         toast.success("Email Sent .");
       })
       .catch((err) => {
-        console.log("Fail", err);
+        // console.log("Fail", err);
         toast.error(err);
       });
     setFieldState({
@@ -75,7 +75,7 @@ function Inquiry() {
     });
   };
 
-  console.log("Email:", fullNameChange.emailUpdated);
+  // console.log("Email:", fullNameChange.emailUpdated);
 
   // const formik = useFormik({
   //   initialValues: {

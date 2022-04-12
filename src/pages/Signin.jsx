@@ -54,10 +54,10 @@ function Signin() {
     validate,
     onSubmit: (values, { resetForm }) => {
       if (values.email === "" || values.password === "") {
-        return console.log("Email Missing ");
+        // return console.log("Email Missing ");
       } else {
         dispatch(adminLoginFunction(values));
-        console.log("Data Submitted! : ", values.email, values.password);
+        // console.log("Data Submitted! : ", values.email, values.password);
         resetForm({ values: "" });
       }
     },

@@ -36,7 +36,7 @@ export const addMaintenanceSuccess = (
 ) => {
   const year = new Date().getFullYear();
   const month = new Date().getMonth() + 1;
-  console.log(year, month);
+  // console.log(year, month);
 
   return (dispatch) => {
     fetch(
@@ -58,14 +58,14 @@ export const addMaintenanceSuccess = (
     )
       .then((resp) => resp.json())
       .then((result) => {
-        console.log("Result for Maintenance : ", result);
+        // console.log("Result for Maintenance : ", result);
         if (result) {
           toast.success("Maintenance Added");
           dispatch(fetchMaintenanceFunction());
         }
       })
       .catch((err) => {
-        console.log("Error in Maintenance : ", err);
+        // console.log("Error in Maintenance : ", err);
         toast.error("Maintenance Error");
       });
   };
@@ -75,7 +75,7 @@ export const addMaintenanceSuccess = (
 export const fetchMaintenanceFunction = (id) => {
   const year = new Date().getFullYear();
   const month = new Date().getMonth() + 1;
-  console.log(year, month);
+  // console.log(year, month);
   return (dispatch) => {
     fetch(
       `https://jenishdemosocmember-default-rtdb.firebaseio.com/maintenance/${year}/${id}.json`,
@@ -89,13 +89,14 @@ export const fetchMaintenanceFunction = (id) => {
       .then((resp) => resp.json())
       .then((data) => {
         if (data) {
-          console.log("Maintenance Data 1: ", data);
+          // console.log("Maintenance Data 1: ", data);
           dispatch(storageMembersMaintenance(data));
           dispatch(storageMaintenanceMonth(data));
         }
       })
       .catch((err) => {
-        console.log("Error Data : ", err);
+        // console.log("Error Data : ", err);
+        toast.error("Error Data");
       });
   };
 };

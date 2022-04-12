@@ -27,14 +27,14 @@ export const noticeSuccessSendFunction = (attachedValues) => {
     )
       .then((resp) => resp.json())
       .then((result) => {
-        console.log("RESULT : ", result);
+        // console.log("RESULT : ", result);
         if (result) {
           toast.success("Notice Save");
           // dispatch(singleNoticeStorageFunction(attachedValues));
         }
       })
       .catch((err) => {
-        console.log("ERR : ", err);
+        // console.log("ERR : ", err);
         toast.error("Notice Error");
       });
   };
@@ -55,7 +55,7 @@ export const changeNoticeMasterIsActiveFunction = (e, id) => {
     )
       .then((resp) => resp.json())
       .then((result) => {
-        console.log("My Result From Sctive : ", result);
+        // console.log("My Result From Sctive : ", result);
         const isActive = result.isActive;
         const description = result.description;
         // console.log("Class & Desp : ", isActive, description);
@@ -63,7 +63,7 @@ export const changeNoticeMasterIsActiveFunction = (e, id) => {
           isActive: true,
           description: description,
         };
-        console.log("Final Obj : ", newObjectToUpdate);
+        // console.log("Final Obj : ", newObjectToUpdate);
         if (result) {
           fetch(
             `https://jenishdemosocmember-default-rtdb.firebaseio.com/noticeMaster/${id}.json`,
@@ -77,7 +77,7 @@ export const changeNoticeMasterIsActiveFunction = (e, id) => {
           )
             .then((resp) => resp.json())
             .then((respp) => {
-              console.log("Result Version from On ....", respp);
+              // console.log("Result Version from On ....", respp);
               if (respp) {
                 fetch(
                   `https://jenishdemosocmember-default-rtdb.firebaseio.com/noticeDisplay/${id}.json`,
@@ -91,11 +91,12 @@ export const changeNoticeMasterIsActiveFunction = (e, id) => {
                 )
                   .then((resp) => resp.json())
                   .then((displayResult) => {
-                    console.log("Notice is displaying...");
+                    // console.log("Notice is displaying...");
                     toast.success("Notice is Enable...");
                   })
                   .catch((err) => {
-                    console.log("Notice could'nt be display!!");
+                    // console.log("Notice could'nt be display!!");
+                    toast.error("Notice could'nt be display!!");
                   });
               }
             });
@@ -117,7 +118,7 @@ export const changeNoticeMasterToFalseFunction = (e, id) => {
     )
       .then((resp) => resp.json())
       .then((mainResult) => {
-        console.log("My Result From Sctive : ", mainResult);
+        // console.log("My Result From Sctive : ", mainResult);
         const isActive = mainResult.isActive;
         const description = mainResult.description;
         // console.log("Class & Desp : ", isActive, description);
@@ -125,7 +126,7 @@ export const changeNoticeMasterToFalseFunction = (e, id) => {
           isActive: false,
           description: description,
         };
-        console.log("Final Obj : ", newObjectToUpdate);
+        // console.log("Final Obj : ", newObjectToUpdate);
         if (mainResult) {
           fetch(
             `https://jenishdemosocmember-default-rtdb.firebaseio.com/noticeMaster/${id}.json`,
@@ -139,7 +140,7 @@ export const changeNoticeMasterToFalseFunction = (e, id) => {
           )
             .then((resp) => resp.json())
             .then((respp) => {
-              console.log("Result Version from Off ....", respp);
+              // console.log("Result Version from Off ....", respp);
               fetch(
                 `https://jenishdemosocmember-default-rtdb.firebaseio.com/noticeDisplay/${id}.json`,
                 {
@@ -152,11 +153,12 @@ export const changeNoticeMasterToFalseFunction = (e, id) => {
               )
                 .then((resp) => resp.json())
                 .then((displayResult) => {
-                  console.log("Notice is displaying...");
+                  // console.log("Notice is displaying...");
                   toast.success("Notice Disabled...");
                 })
                 .catch((err) => {
-                  console.log("Notice could'nt be display!!");
+                  // console.log("Notice could'nt be display!!");
+                  toast.error("Notice could'nt be display!!");
                 });
             });
         }
@@ -181,10 +183,10 @@ export const noticeDisplaySuccessSendFunction = (e, id, result) => {
       )
         .then((resp) => resp.json())
         .then((dispResult) => {
-          console.log("Display Result : ", dispResult);
+          // console.log("Display Result : ", dispResult);
         })
         .catch((err) => {
-          console.log("Error From Display Result : ", err);
+          // console.log("Error From Display Result : ", err);
         });
     }
   };
@@ -204,7 +206,7 @@ export const noticeSuccessStorageFunction = () => {
     )
       .then((resp) => resp.json())
       .then((result) => {
-        console.log("Data Reterive : ", result);
+        // console.log("Data Reterive : ", result);
 
         dispatch(noticesuccessStorageAction(result));
       });
@@ -230,16 +232,16 @@ export const singleNoticeStorageFunction = (e, id) => {
       )
         .then((resp) => resp.json())
         .then((result) => {
-          console.log("UserData :", result);
+          // console.log("UserData :", result);
           const activeVal = result.isActive;
           const desp = result.values.description;
           const updateVersion = {
             activeVal: true,
             desp: desp,
           };
-          console.log(activeVal);
-          console.log(desp);
-          console.log("Obj : ", updateVersion);
+          // console.log(activeVal);
+          // console.log(desp);
+          // console.log("Obj : ", updateVersion);
 
           dispatch(noticeDisplaySuccessSendFunction(e, id, result));
         })
@@ -266,7 +268,7 @@ export const noticeSuccessDeleteFunction = (id) => {
       .then((resp) => resp.json())
       .then((result) => {
         if (result) {
-          console.log("Finally data is Deleted : ", result);
+          // console.log("Finally data is Deleted : ", result);
           toast.success("Notice Admin Data Deleted");
         }
       })
@@ -292,12 +294,12 @@ export const noticeDeleteNoticeDisplay = (id) => {
     )
       .then((resp) => resp.json())
       .then((noticeDeleteResult) => {
-        console.log("Display Data Deleted : ", noticeDeleteResult);
+        // console.log("Display Data Deleted : ", noticeDeleteResult);
         toast.success("Notice Data Display Deleted ");
       })
       .catch((err) => {
         toast.error(err);
-        console.Console.log("Error Display Notice Delete", err);
+        // console.Console.log("Error Display Notice Delete", err);
       });
   };
 };

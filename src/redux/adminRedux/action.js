@@ -48,7 +48,7 @@ export const adminLoginFunction = (values) => {
         console.log(data);
         if (data.localId) {
           if (data.email === "jenish@gmail.com") {
-            console.log("Yes JSONID GOT");
+            // console.log("Yes JSONID GOT");
             localStorage.setItem("adminLogin", "true");
             dispatch(adminLogin());
             dispatch(adminIdToken(data.idToken));

@@ -61,9 +61,9 @@ function Dashboard() {
     }
   };
 
-  console.log("SearchField :", searchField);
-  console.log("Final List : ", finalList);
-  console.log("Search Result : ", searchResult);
+  // console.log("SearchField :", searchField);
+  // console.log("Final List : ", finalList);
+  // console.log("Search Result : ", searchResult);
 
   let memberID =
     memberList &&
@@ -72,9 +72,9 @@ function Dashboard() {
     });
 
   const handleDelete = (id, email, password) => {
-    console.log(id, email, password);
+    // console.log(id, email, password);
     if (email && password) {
-      console.log(email, password);
+      // console.log(email, password);
       dispatch(deleteMemberFunction(id, { email, password }));
       toast.success("Deleted!");
     } else {
@@ -96,7 +96,7 @@ function Dashboard() {
   const handleShowMore = () => {
     setNoOfItemShown(noOfItemShown + 3);
 
-    console.log("Member List on Click : ", memberItem);
+    // console.log("Member List on Click : ", memberItem);
   };
 
   return (

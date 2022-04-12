@@ -12,13 +12,13 @@ function Maintenance() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchAllMaintenanceFunction());
-    console.log("Main:", addMaintenanceStorage);
+    // console.log("Main:", addMaintenanceStorage);
   }, []);
 
   useEffect(() => {
     Object.keys(addMaintenanceStorage).map((id) => {
       return Object.keys(addMaintenanceStorage[id]).find((fs) => {
-        return console.log("Maintenance : ", addMaintenanceStorage[id][4]);
+        // return console.log("Maintenance : ", addMaintenanceStorage[id][4]);
       });
     });
   });
