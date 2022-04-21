@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import pexelImg1 from "../assets/img/customImgs/pexelImg1.jpg";
 import Breadcrumb from "../component/Breadcrumb";
 import Wrapper from "../component/Wapper";

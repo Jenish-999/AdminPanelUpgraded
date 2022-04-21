@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Bgprofileimg from "../assets/img/profile-bg-img-3.jpg";
-import Profileimg from "../assets/img/bruce-mars.jpg";
 import Footer from "./Footer";
 import Breadcrumb from "../component/Breadcrumb";
 import Wrapper from "../component/Wapper";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { viewMemberFunction } from "../redux/memberRedux/action";
-import { useFormik } from "formik";
-import {
-  addMaintenanceSuccess,
-  fetchMaintenanceFunction,
-} from "../redux/maintenanceRedux/action";
+import { fetchMaintenanceFunction } from "../redux/maintenanceRedux/action";
 import MaintenceModal from "../component/MaintenceModal";
 function Profile() {
   const { id } = useParams();

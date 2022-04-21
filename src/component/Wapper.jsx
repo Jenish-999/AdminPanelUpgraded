@@ -1,20 +1,20 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import Navbar from "../pages/Navbar";
 import Headernavbar from "../pages/Headernavbar";
 import "../App.css";
 function Wrapper({ children }) {
-    const isAdminLogin = useSelector((state) => state.adminlog.isAdminLogin);
+  const isAdminLogin = useSelector((state) => state.adminlog.isAdminLogin);
 
-  if(!isAdminLogin) {
-     return <Navigate to="/signin" />;
+  if (!isAdminLogin) {
+    return <Navigate to="/signin" />;
   }
   return (
     <>
       <div className="cosWidth  float-right">
         <div className="p-2">
-        <Headernavbar />
+          <Headernavbar />
         </div>
       </div>
       <Navbar />

@@ -7,12 +7,9 @@ import Breadcrumb from "../component/Breadcrumb";
 import "../App.css";
 import { useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addMemberFunction,
-  listmemberFunction,
-} from "../redux/memberRedux/action";
+import { addMemberFunction } from "../redux/memberRedux/action";
 import { toast } from "react-toastify";
-import { storage, allStorage } from "../firebase";
+import { storage } from "../firebase";
 import Styled from "styled-components";
 
 function AddMembers({ PagesText }) {

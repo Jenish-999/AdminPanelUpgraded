@@ -56,10 +56,13 @@ function Inquiry() {
     // console.log("DATa :  ", fieldState);
     emailjs
       .sendForm(
-        "service_f4arwbe",
-        "template_of7mjgk",
+        // "service_f4arwbe",
+        "service_4nccnhy",
+        // "template_of7mjgk",
+        "template_uno2ibh",
         form.current,
-        "9MBQwbSH7hWNgIvvg"
+        // "9MBQwbSH7hWNgIvvg"
+        "nxVwfZT0zXv_eBHOL"
       )
       .then((result) => {
         // console.log("Res", result);
