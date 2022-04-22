@@ -43,13 +43,13 @@ function Maintenance() {
                         </h6>
                       </div>
                       <div className="mx-4 d-flex ">
-                        <div className="input-group input-group-outline h-25">
+                        {/* <div className="input-group input-group-outline h-25">
                           <input
                             type="search"
                             className="form-control text-dark bg-light"
                             placeholder="Maintenance .."
                           />
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   </div>

@@ -75,7 +75,7 @@ function Events() {
   }, []);
 
   const handleDelete = (id) => {
-    const con = Window.confirm("Are you Sure you want to delete ?");
+    const con = confirm("Are you Sure you want to delete ?");
     if (con) {
       // console.log("ID to Delete : ", id);
       dispatch(eventDeleteSucess(id));
