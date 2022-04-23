@@ -240,12 +240,12 @@ function Profile() {
                                       </li>
                                     </ul>
                                   </div>
-                                  <a
+                                  {/* <a
                                     className="btn btn-link pe-3 ps-0 mb-0 ms-auto w-25 w-md-auto"
                                     href="/"
                                   >
                                     Print
-                                  </a>
+                                  </a> */}
                                 </li>
                               );
                             })}
